@@ -1,27 +1,27 @@
 <section class="footer">
    <div class="box-container">
       <div class="box">
-         <h3><img src="./public/footer/quick.svg" alt="quick_link">Quick links</h3>
-         <a href="home.php">Home</a>
-         <a href="about.php">About</a>
-         <a href="shop.php">Shop</a>
-         <a href="contact.php">Contact</a>
+         <h3><img src="./public/footer/quick.svg" alt="quick_link">Liên kết nhanh</h3>
+         <a href="home.php">Trang chủ</a>
+         <a href="about.php">Thông tin</a>
+         <a href="shop.php">Cửa hàng</a>
+         <a href="contact.php">Liên hệ</a>
       </div>
 
       <div class="box">
-         <h3><img src="./public/footer/extra.svg" alt="extra">Extra links</h3>
-         <a href="login.php">Login</a>
-         <a href="register.php">Register</a>
-         <a href="cart.php">Cart</a>
-         <a href="orders.php">Orders</a>
+         <h3><img src="./public/footer/extra.svg" alt="extra">Liên kết bổ sung</h3>
+         <a href="login.php">Đăng nhập</a>
+         <a href="register.php">Đăng ký</a>
+         <a href="cart.php">Giỏ hàng</a>
+         <a href="orders.php">Đơn hàng</a>
       </div>
 
       <div class="box">
-         <h3><img src="./public/footer/reference.svg" alt="reference_link">Reference links</h3>
-         <a href="login.php">Privacy Policy</a>
-         <a href="register.php">Operating Regulations</a>
-         <a href="cart.php">Shipping Policy</a>
-         <a href="orders.php">Customer Consulting</a>
+         <h3><img src="./public/footer/reference.svg" alt="reference_link">Liên kết tham khảo</h3>
+         <a href="login.php">Chính sách bảo mật</a>
+         <a href="register.php">Quy định hoạt động</a>
+         <a href="cart.php">Chính sách vận chuyển</a>
+         <a href="orders.php">Tư vấn khách hàng</a>
       </div>
 
       <div class="box">

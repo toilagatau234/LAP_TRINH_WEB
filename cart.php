@@ -54,22 +54,22 @@ if(isset($_GET['delete_all'])){
 <?php include 'header.php'; ?>
 
 <div class="heading">
-   <h3>shopping cart</h3>
-   <p> <a href="home.php">home</a> / cart </p>
+   <h3>giỏ hàng</h3>
+   <p> <a href="home.php">Trang chủ</a> / Giỏ hàng </p>
 </div>
 
 <section class="cart-container">
    <div class="cart-head">
       <?php $select_cart = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed'); ?>
       <div class="head-left">
-         <h2>My List</h2>
-         <h6>&bull; <?php echo mysqli_num_rows($select_cart) ?> items</h6>
+         <h2>Danh sách của tôi</h2>
+         <h6>&bull; <?php echo mysqli_num_rows($select_cart) ?> mặt hàng</h6>
       </div>
       <div>
          <select name="sort_cart" id="sort_cart">
-            <option value="default">default</option>
+            <option value="default">mặc định</option>
             <option value="alphabet">a-z</option>
-            <option value="low_to_high_price">Low to high price</option>
+            <option value="low_to_high_price">Giá thấp đến cao</option>
          </select>
       </div>
    </div>
@@ -103,7 +103,7 @@ if(isset($_GET['delete_all'])){
                </div>
             </div>
             <div class="item-btn">
-               <button type="submit" name="update_cart" value="update" class="option-btn">update</button>
+               <button type="submit" name="update_cart" value="update" class="option-btn">Cập nhập</button>
             </div>
             <div class="item-delete">
                <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="fas fa-times" onclick="return confirm('delete this from cart?');"></a>
@@ -114,17 +114,17 @@ if(isset($_GET['delete_all'])){
       $grand_total += $sub_total;
          }
       }else{
-         echo '<p class="empty">your cart is empty</p>';
+         echo '<p class="empty">giỏ hàng của bạn đang trống!</p>';
       }
       ?>
       <li class="cart-action">
          <div class="cart-btn">
-            <a href="shop.php" class="option-btn"><img src="./public/cart/continue.svg" alt="continue_icon">continue shopping</a>
-            <a href="checkout.php" class="btn <?php echo ($grand_total > 1)?'':'disabled'; ?>"><img src="./public/cart/checkout.svg" alt="checkout_icon">proceed to checkout</a>
-            <a href="cart.php?delete_all" class="delete-btn <?php echo ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from cart?');"><img src="./public/cart/remove.svg" alt="delete_all_icon">delete all</a>
+            <a href="shop.php" class="option-btn"><img src="./public/cart/continue.svg" alt="continue_icon">tiếp tục mua sắm</a>
+            <a href="checkout.php" class="btn <?php echo ($grand_total > 1)?'':'disabled'; ?>"><img src="./public/cart/checkout.svg" alt="checkout_icon">tiến hành thanh toán</a>
+            <a href="cart.php?delete_all" class="delete-btn <?php echo ($grand_total > 1)?'':'disabled'; ?>" onclick="return confirm('delete all from cart?');"><img src="./public/cart/remove.svg" alt="delete_all_icon">xóa tất cả</a>
          </div>
          <div class="cart-total">
-            <p>grand total : <span>$<?php echo $grand_total; ?></span></p>
+            <p>tổng cộng : <span>$<?php echo $grand_total; ?></span></p>
          </div>
       </li>
    </ul>

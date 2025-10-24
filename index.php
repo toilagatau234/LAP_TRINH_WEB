@@ -20,19 +20,16 @@
             <h2>Bookept</h2>
         </div>
         <div class="link">
-            <a href="admin_page.php">
-                <h3>Admin page</h3>
-            </a>
             <img src="./public/index/github.svg" alt="github">
         </div>
     </nav>
     <main>
         <div class="content">
             <div>
-                <h3>Bookept: a dead simple reading list. Search books, add them to your Bookist and read them when you're ready. Once you finish the book, mark it read and watch your bookshelf stack up!</h3>
+                <h3>Bookept: Một danh sách đọc sách cực kỳ đơn giản. Tìm kiếm sách, thêm chúng vào Bookist và đọc khi bạn đã sẵn sàng. Sau khi đọc xong, hãy đánh dấu là "đã đọc" và xem kệ sách của bạn được xếp chồng lên nhau!</h3>
                 <a href="home.php">
                 <i class="fa-solid fa-compass"></i>
-                    <h3>Explore</h3>
+                    <h3>Khám phá</h3>
                 </a>
             </div>
         </div>

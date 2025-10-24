@@ -20,10 +20,10 @@ if (isset($_POST['add_to_cart'])) {
    $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
 
    if (mysqli_num_rows($check_cart_numbers) > 0) {
-      $message[] = 'already added to cart!';
+      $message[] = 'đã được thêm vào giỏ hàng!';
    } else {
       mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
-      $message[] = 'product added to cart!';
+      $message[] = 'sản phẩm đã được thêm vào giỏ hàng!';
    }
 }
 
@@ -43,10 +43,8 @@ if (isset($_POST['add_to_cart'])) {
 
    <link rel="icon" href="public/favicon.ico">
 
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="styles/main.css">
    <link rel="stylesheet" href="styles/customers/service.css">
 </head>
@@ -57,14 +55,14 @@ if (isset($_POST['add_to_cart'])) {
 
    <section class="home">
       <div class="content">
-         <h3>Hand Picked Book to your door.</h3>
+         <h3>Sách được chọn lọc kỹ lưỡng giao tận nhà bạn.</h3>
          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, quod? Reiciendis ut porro iste totam.</p>
-         <a href="about.php" class="white-btn">discover more</a>
+         <a href="about.php" class="white-btn">khám phá thêm</a>
       </div>
    </section>
 
    <section class="products">
-      <h1 class="title">latest products</h1>
+      <h1 class="title">sản phẩm mới nhất</h1>
       <div class="box-container">
          <?php
          $select_products = mysqli_query($conn, "SELECT * FROM `products` LIMIT 8") or die('query failed');
@@ -91,7 +89,7 @@ if (isset($_POST['add_to_cart'])) {
                         </div>
                      </div>
                      <div class="action">
-                        <button type="submit" name="add_to_cart"><img src="./public/card/cart.svg" alt="cart_icon">add to cart</button>
+                        <button type="submit" name="add_to_cart"><img src="./public/card/cart.svg" alt="cart_icon">thêm vào giỏ</button>
                         <img src="./public/card/heart.svg" alt="favourite_icon">
                      </div>
                   </div>
@@ -99,13 +97,13 @@ if (isset($_POST['add_to_cart'])) {
          <?php
             }
          } else {
-            echo '<p class="empty">no products added yet!</p>';
+            echo '<p class="empty">chưa có sản phẩm nào được thêm vào!</p>';
          }
          ?>
       </div>
 
       <div class="load-more" style="margin-top: 3rem; text-align:center">
-         <a href="shop.php" class="transparent-btn">load more...</a>
+         <a href="shop.php" class="transparent-btn">tải thêm...</a>
       </div>
    </section>
 
@@ -116,21 +114,21 @@ if (isset($_POST['add_to_cart'])) {
       <div class="content">
          <div class="service-title">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFwUZmt1x3c_O9OQEuyVIumLVmi3p85OEW-A&usqp=CAU" alt="" style="width:4rem">
-            <h3>have any questions?</h3>
+            <h3>Bạn có câu hỏi nào không?</h3>
          </div>
          <div class="service-content">
-            <p>24/7 customer care team ready to answer all your questions.</p>
-            <p>Contact us for the best service support!</p>
+            <p>Đội ngũ chăm sóc 24/7 sẵn sàng trả lời mọi câu hỏi của bạn.</p>
+            <p>Liên hệ với chúng tôi để được hỗ trợ dịch vụ tốt nhất!</p>
          </div>
          <div class="service-feature">
             <p><img src="./public/service/tick.svg" alt="tick">24/7</p>
-            <p><img src="./public/service/tick.svg" alt="tick">Fast</p>
-            <p><img src="./public/service/tick.svg" alt="tick">Friendly</p>
-            <p><img src="./public/service/tick.svg" alt="tick">Enthusiasm</p>
-            <p><img src="./public/service/tick.svg" alt="tick">Professional</p>
+            <p><img src="./public/service/tick.svg" alt="tick">Nhanh chống</p>
+            <p><img src="./public/service/tick.svg" alt="tick">Thân thiện</p>
+            <p><img src="./public/service/tick.svg" alt="tick">Nhiệt tình</p>
+            <p><img src="./public/service/tick.svg" alt="tick">Chuyên nghiệp</p>
          </div>
          <div>
-            <a href="contact.php" class="option-btn">contact us</a>
+            <a href="contact.php" class="option-btn">liên hệ với chúng tôi</a>
          </div>
       </div>
    </section>

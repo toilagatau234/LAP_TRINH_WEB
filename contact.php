@@ -54,21 +54,20 @@ if (isset($_POST['send'])) {
    <?php include 'header.php'; ?>
 
    <div class="heading">
-      <h3>contact us</h3>
-      <p><a href="home.php">home</a> / contact</p>
+      <h3>liên hệ với chúng tôi</h3>
+      <p><a href="home.php">Trang chủ</a> / liên hệ</p>
    </div>
 
    <section class="contact">
       <form action="" method="post">
-         <h3>&#9135;&#9135;&#9135;&#9135;&nbsp;&nbsp;say something!</h3>
-         <input type="text" name="name" required placeholder="full name" class="box">
+         <h3>&#9135;&#9135;&#9135;&#9135;&nbsp;&nbsp;nói điều gì đó!</h3>
+         <input type="text" name="name" required placeholder="tên đầy đủ" class="box">
          <input type="email" name="email" required placeholder="email" class="box">
-         <input type="number" name="number" required placeholder="phone number" class="box">
-         <textarea name="message" class="box" placeholder="type your message..." id="" cols="30" rows="10"></textarea>
-         <input type="submit" value="📧 send message" name="send" class="btn">
+         <input type="number" name="number" required placeholder="số điện thoại" class="box">
+         <textarea name="message" class="box" placeholder="nhập tin nhắn của bạn..." id="" cols="30" rows="10"></textarea>
+         <input type="submit" value="📧 gửi tin nhắn" name="send" class="btn">
       </form>
       <div class="contact-info">
-         <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.1316505217173!2d106.7994309147447!3d10.87759006029277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d8a415a9d221%3A0x550c2b41569376f9!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBRdeG7kWMgVOG6vyAtIMSQ4bqhaSBo4buNYyBRdeG7kWMgZ2lhIFRQLkhDTQ!5e0!3m2!1svi!2s!4v1647529939482!5m2!1svi!2s" width="600" height="300" allowfullscreen="" loading="lazy"></iframe> -->
          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2330.3366358435924!2d106.65318198007925!3d10.800323557567667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175292976c117ad%3A0x5b3f38b21051f84!2zSOG7jWMgVmnhu4duIEjDoG5nIEtow7RuZyBWaeG7h3QgTmFtIENTMg!5e0!3m2!1svi!2sus!4v1760601215149!5m2!1svi!2sus" width="600" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <div class="contact-infor-content">
             <div>

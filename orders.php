@@ -38,25 +38,25 @@ if (!isset($user_id)) {
    <?php include 'header.php'; ?>
 
    <div class="heading">
-      <h3>your orders</h3>
-      <p> <a href="home.php">home</a> / orders </p>
+      <h3>đơn hàng của bạn</h3>
+      <p> <a href="home.php">Trang chủ</a> / đơn đặt hàng </p>
    </div>
 
    <section class="order-container">
       <div class="order-title">
-         <h1>placed orders</h1>
+         <h1>Đã đặt hàng</h1>
       </div>
       <table cellspacing="0">
          <tr>
-            <td>place on</td>
-            <td>name</td>
-            <td>number</td>
-            <td>email</td>
-            <td>address</td>
-            <td>payment</td>
-            <td>product</td>
-            <td>total</td>
-            <td>status</td>
+            <td>Thời gian đặt</td>
+            <td>Tên</td>
+            <td>Số điện thoại</td>
+            <td>Email</td>
+            <td>Địa chỉ</td>
+            <td>Phương thức thanh toán</td>
+            <td>Sản phẩm</td>
+            <td>Tổng cộng</td>
+            <td>Trạng thái</td>
          </tr>
          <?php
          $order_query = mysqli_query($conn, "SELECT * FROM `orders` WHERE user_id = '$user_id'") or die('query failed');
@@ -82,12 +82,12 @@ if (!isset($user_id)) {
          <?php
             }
          } else {
-            echo '<p class="empty">no orders placed yet!</p>';
+            echo '<p class="empty">chưa có đơn hàng nào được đặt!</p>';
          }
          ?>
       </table>
       <div class="order-total">
-         <h3>Total:</h3>
+         <h3>Tổng cộng:</h3>
          <h3><?php echo mysqli_num_rows($order_query) ?></h3>
       </div>
    </section>

@@ -8,7 +8,8 @@ if (isset($_POST['submit'])) {
    $email = mysqli_real_escape_string($conn, $_POST['email']);
    $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email' AND password = '$pass'") or die('query failed');
+   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE 
+      email = '$email' AND password = '$pass'") or die('query failed');
 
    if (mysqli_num_rows($select_users) > 0) {
 
@@ -28,7 +29,7 @@ if (isset($_POST['submit'])) {
          header('location:home.php');
       }
    } else {
-      $message[] = 'incorrect email or password!';
+      $message[] = 'email hoặc mật khẩu không chính xác!';
    }
 }
 
@@ -71,23 +72,23 @@ if (isset($_POST['submit'])) {
 <div class="form-container">
       <form class="login_form" action="" method="post">
          <div class="form-inner">
-            <h2>Login now</h2>
+            <h2>Đăng nhập ngay</h2>
             <div class="input-group">
                <div class="icon">
                   <img src="./public/form/user.svg" alt="user">
                </div>
-               <input type="email" name="email" placeholder="enter your email" required />
+               <input type="email" name="email" placeholder="nhập email của bạn" required />
             </div>
             <div class="input-group">
                <div class="icon">
                   <img src="./public//form/finger_print.svg" alt="finger_print">
                </div>
-               <input type="password" name="password" placeholder="enter your password" required />
+               <input type="password" name="password" placeholder="nhập mật khẩu của bạn" required />
             </div>
             <div class="btn-group">
-               <button class="btn btn--primary" type="submit" name="submit" value="login now">Sign in</button>
+               <button class="btn btn--primary" type="submit" name="submit" value="login now">Đăng nhập</button>
             </div>
-            <p>Don't have account? <a class="btn--text" href="register.php">register now</a></p>
+            <p>Bạn không có tài khoản? <a class="btn--text" href="register.php">Đăng ký ngay</a></p>
          </div>
       </form>
    </div>

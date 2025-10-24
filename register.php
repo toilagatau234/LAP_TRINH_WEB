@@ -4,21 +4,40 @@ include 'config.php';
 
 if (isset($_POST['submit'])) {
 
+   // buộc người đăng ký mới phải có vai trò 'người dùng'
+   $user_type = 'user';
    $name = mysqli_real_escape_string($conn, $_POST['name']);
    $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
-   $cpass = mysqli_real_escape_string($conn, md5($_POST['cpassword']));
-   $user_type = $_POST['user_type'];
+   // băm mật khẩu trước khi thoát
+   $pass = md5($_POST['password']);
+   $cpass = md5($_POST['cpassword']);
+   $pass = mysqli_real_escape_string($conn, $pass);
+   $cpass = mysqli_real_escape_string($conn, $cpass);
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email' AND password = '$pass'") or die('query failed');
+   // kiểm tra xem email đã tồn tại chưa (ngăn chặn các tài khoản trùng lặp cho cùng một email)
+   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email'") or die('query failed');
 
    if (mysqli_num_rows($select_users) > 0) {
-      $message[] = 'user already exist!';
+      $message[] = 'user already exist!'; // người dùng đã tồn tại!
    } else {
-      if ($pass != $cpass) {
-         $message[] = 'confirm password not matched!';
+      if ($pass != $cpass) { // xác nhận mật khẩu không khớp
+         $message[] = 'xác nhận mật khẩu không khớp!';
       } else {
-         mysqli_query($conn, "INSERT INTO `users`(name, email, password, user_type) VALUES('$name', '$email', '$cpass', '$user_type')") or die('query failed');
+         $expected_id = 1; // tìm id người dùng trống đầu tiên
+         $ids_result = mysqli_query($conn, "SELECT id FROM `users` ORDER BY id ASC") or die('query failed');
+         while ($row = mysqli_fetch_assoc($ids_result)) { // duyệt qua các id hiện có
+            $current_id = (int)$row['id']; // chuyển đổi id hiện tại sang số nguyên
+            if ($current_id == $expected_id) { // id hiện tại khớp với id dự kiến
+               $expected_id++; // tăng id dự kiến lên để kiểm tra tiếp
+            } elseif ($current_id > $expected_id) { // khoảng trống được tìm thấy
+               break;
+            }
+         }
+
+         $new_id = (int)$expected_id;
+
+         $query = "INSERT INTO `users`(id, name, email, password, user_type) VALUES($new_id, '$name', '$email', '$pass', '$user_type')";
+         mysqli_query($conn, $query) or die('query failed: ' . mysqli_error($conn));
          $message[] = 'registered successfully!';
          header('location:login.php');
       }
@@ -65,42 +84,35 @@ if (isset($_POST['submit'])) {
    }
    ?>
 
-<div class="form-container">
+   <div class="form-container">
       <form class="register_form" action="" method="post">
-      <div class="form-inner">
-         <h2>Register now</h2>
-         <div class="input-group">
+         <div class="form-inner">
+            <h2>Đăng ký ngay</h2>
+            <div class="input-group">
                <div class="icon">
                   <img src="./public/form/user.svg" alt="user">
                </div>
-               <input type="text" name="name" placeholder="enter your name" required class="box">
-         </div>
-         <div class="input-group">
+               <input type="text" name="name" placeholder="nhập tên của bạn" required class="box">
+            </div>
+            <div class="input-group">
                <div class="icon">
                   <i class="fa-regular fa-envelope"></i>
                </div>
-               <input type="email" name="email" placeholder="enter your email" required class="box">
+               <input type="email" name="email" placeholder="nhập email của bạn" required class="box">
+            </div>
+            <div class="input-group">
+               <input type="password" name="password" placeholder="nhập mật khẩu của bạn" required class="box">
+            </div>
+            <div class="input-group">
+               <input type="password" name="cpassword" placeholder="xác nhận mật khẩu của bạn" required class="box">
+            </div>
+            <div class="btn-group">
+               <input type="submit" name="submit" value="register now" class="btn">
+            </div>
+            <p>Bạn đã có tài khoản? <a href="login.php">Đăng nhập ngay</a></p>
          </div>
-         <div class="input-group">
-               <input type="password" name="password" placeholder="enter your password" required class="box">
-         </div>
-         <div class="input-group">
-               <input type="password" name="cpassword" placeholder="confirm your password" required class="box">
-         </div>
-         <!-- <div class="input-group">
-         <select name="user_type" class="box">
-            <option value="user">user</option>
-            <option value="admin">admin</option>
-         </select>
-         </div> -->
-         <div class="btn-group">
-         <input type="submit" name="submit" value="register now" class="btn">
-         </div>
-         <p>Already have an account? <a href="login.php">login now</a></p>
-      </div>
       </form>
    </div>
-
 </body>
 
 </html>

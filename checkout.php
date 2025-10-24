@@ -76,63 +76,63 @@ if (isset($_POST['order_btn'])) {
    <?php include 'header.php'; ?>
 
    <div class="heading">
-      <h3>checkout</h3>
-      <p> <a href="home.php">home</a> / checkout </p>
+      <h3>thanh toán</h3>
+      <p> <a href="home.php">Trang chủ</a> / thanh toán </p>
    </div>
 
    <section class="checkout-container">
       <form action="" method="post">
-         <h3><i class="fa-solid fa-folder-open"></i> place your order</h3>
+         <h3><i class="fa-solid fa-folder-open"></i> đơn hàng của bạn</h3>
          <div class="flex">
             <div class="inputBox">
-               <span><i class="fa-solid fa-signature"></i> your name :</span>
-               <input type="text" name="name" required placeholder="enter your name">
+               <span><i class="fa-solid fa-signature"></i> tên của bạn :</span>
+               <input type="text" name="name" required placeholder="tên của bạn">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-hashtag"></i> your number :</span>
-               <input type="number" name="number" required placeholder="enter your number">
+               <span><i class="fa-solid fa-hashtag"></i> số điện thoại của bạn :</span>
+               <input type="number" name="number" required placeholder="số điện thoại của bạn">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-at"></i> your email :</span>
-               <input type="email" name="email" required placeholder="enter your email">
+               <span><i class="fa-solid fa-at"></i> email của bạn :</span>
+               <input type="email" name="email" required placeholder="email của bạn">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-money-check-dollar"></i> payment method :</span>
+               <span><i class="fa-solid fa-money-check-dollar"></i> phương thức thanh toán :</span>
                <select name="method">
-                  <option value="cash on delivery">cash on delivery</option>
-                  <option value="credit card">credit card</option>
+                  <option value="cash on delivery">thanh toán khi nhận hàng</option>
+                  <option value="credit card">thẻ tín dụng</option>
                   <option value="paypal">paypal</option>
                   <option value="momo">momo</option>
                   <option value="visa debit">visa debit</option>
                </select>
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-house"></i> house number :</span>
-               <input type="number" min="0" name="flat" required placeholder="e.g. flat no.">
+               <span><i class="fa-solid fa-house"></i> số nhà :</span>
+               <input type="number" min="0" name="flat" required placeholder="số nhà.">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-location-dot"></i> street :</span>
-               <input type="text" name="street" required placeholder="e.g. street name">
+               <span><i class="fa-solid fa-location-dot"></i> đường :</span>
+               <input type="text" name="street" required placeholder="e.g. tên đường">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-city"></i> city :</span>
-               <input type="text" name="city" required placeholder="e.g. New York">
+               <span><i class="fa-solid fa-city"></i> thành phố :</span>
+               <input type="text" name="city" required placeholder="e.g. Cao Lãnh">
             </div>
             <div class="inputBox">
-               <span><i class="fa-brands fa-squarespace"></i> state/province :</span>
-               <input type="text" name="state" required placeholder="e.g. Ohio">
+               <span><i class="fa-brands fa-squarespace"></i> tỉnh :</span>
+               <input type="text" name="state" required placeholder="e.g. Đồng Tháp">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-earth-americas"></i> country :</span>
-               <input type="text" name="country" required placeholder="e.g. United States">
+               <span><i class="fa-solid fa-earth-americas"></i> quốc gia :</span>
+               <input type="text" name="country" required placeholder="e.g. Việt Nam">
             </div>
             <div class="inputBox">
-               <span><i class="fa-solid fa-file-zipper"></i> ZIP code :</span>
+               <span><i class="fa-solid fa-file-zipper"></i> mã bưu chính :</span>
                <input type="number" min="0" name="pin_code" required placeholder="e.g. 1234567">
             </div>
          </div>
          <div style="display: flex; justify-content:end">
-            <input type="submit" value="🚩 order now" class="btn" name="order_btn">
+            <input type="submit" value="🚩 đặt hàng ngay" class="btn" name="order_btn">
          </div>
       </form>
 
@@ -143,7 +143,7 @@ if (isset($_POST['order_btn'])) {
 
       <div class="summary-order">
          <div class="summary-header">
-            <h2><i class="fa-solid fa-cart-flatbed"></i> Your cart</h2>
+            <h2><i class="fa-solid fa-cart-flatbed"></i> Giỏ hàng của bạn</h2>
             <h5 style="background: #888; border-radius: 50%; width:3.5rem; height:3.5rem; color:white; display:flex; justify-content:center; align-items:center"><?php echo mysqli_num_rows($select_cart) ?></h5>
          </div>
          <div class="summary-list">
@@ -160,12 +160,12 @@ if (isset($_POST['order_btn'])) {
             <?php
                }
             } else {
-               echo '<p class="empty">your cart is empty</p>';
+               echo '<p class="empty">giỏ hàng của bạn đang trống</p>';
             }
             ?>
          </div>
          <div class="summary-total">
-            <p><i class="fa-solid fa-border-all"></i> grand total : </p>
+            <p><i class="fa-solid fa-border-all"></i> tổng cộng : </p>
             <p style="color:red">$<?php echo $grand_total; ?></p>
          </div>
       </div>

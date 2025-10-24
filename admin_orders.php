@@ -50,7 +50,7 @@ if(isset($_GET['delete'])){
 
 <section class="orders">
 
-   <h1 class="title">placed orders</h1>
+   <h1 class="title">đã đặt hàng</h1>
 
    <div class="box-container">
       <?php
@@ -59,30 +59,34 @@ if(isset($_GET['delete'])){
          while($fetch_orders = mysqli_fetch_assoc($select_orders)){
       ?>
       <div class="box">
-         <p> User id : <span><?php echo $fetch_orders['user_id']; ?></span> </p>
-         <p> Placed on : <span><?php echo $fetch_orders['placed_on']; ?></span> </p>
-         <p> Name : <span><?php echo $fetch_orders['name']; ?></span> </p>
-         <p> Number : <span><?php echo $fetch_orders['number']; ?></span> </p>
+         <p> ID người dùng : <span><?php echo $fetch_orders['user_id']; ?></span> </p>
+         <p> Thời gian đặt : <span><?php echo $fetch_orders['placed_on']; ?></span> </p>
+         <p> Tên : <span><?php echo $fetch_orders['name']; ?></span> </p>
+         <p> Số điện thoại : <span><?php echo $fetch_orders['number']; ?></span> </p>
          <p> Email : <span><?php echo $fetch_orders['email']; ?></span> </p>
-         <p> Address : <span><?php echo $fetch_orders['address']; ?></span> </p>
-         <p> Total products : <span><?php echo $fetch_orders['total_products']; ?></span> </p>
-         <p> Total price : <span>$<?php echo $fetch_orders['total_price']; ?>/-</span> </p>
-         <p> Payment method : <span><?php echo $fetch_orders['method']; ?></span> </p>
+         <p> Địa chỉ : <span><?php echo $fetch_orders['address']; ?></span> </p>
+         <p> Tổng sản phẩm : <span><?php echo $fetch_orders['total_products']; ?></span> </p>
+         <p> Tổng giá : <span>$<?php echo $fetch_orders['total_price']; ?>/-</span> </p>
+         <p> Phương thức thanh toán : <span><?php echo $fetch_orders['method']; ?></span> </p>
          <form action="" method="post">
             <input type="hidden" name="order_id" value="<?php echo $fetch_orders['id']; ?>">
             <select name="update_payment">
                <option value="" selected disabled><?php echo $fetch_orders['payment_status']; ?></option>
-               <option value="pending">Pending</option>
-               <option value="completed">Completed</option>
+               <option value="pending">Đang xử lý</option>
+               <option value="completed">Thành công</option>
             </select>
          </br>
          
          </form>
          <div class="action">
                      <!-- <div class="name"><?php echo $fetch_products['name']; ?></div> -->
-                     <a href="admin_products.php?update=<?php echo $fetch_products['id']; ?>" class="option-btn">Update</a>
-                     <a href="admin_products.php?delete=<?php echo $fetch_products['id']; ?>" class="delete-btn" onclick="return confirm('delete this product?');">Delete</a>
-                     </div>
+                     <a href="admin_products.php?update=<?php echo $fetch_products['id']; ?>
+                        " class="option-btn">Cập nhật</a>
+
+                     <a href="admin_products.php?delete=<?php echo $fetch_products['id']; ?>
+                        " class="delete-btn" onclick="return confirm('delete this product?');">Xóa</a>
+
+         </div>
       </div>
       <?php
          }
