@@ -14,6 +14,7 @@ if (isset($_POST['add_product'])) {
 
    $name = mysqli_real_escape_string($conn, $_POST['name']);
    $price = $_POST['price'];
+   $category_id = $_POST['category_id'];
    $image = $_FILES['image']['name'];
    $image_size = $_FILES['image']['size'];
    $image_tmp_name = $_FILES['image']['tmp_name'];
@@ -116,6 +117,15 @@ if (isset($_POST['update_product'])) {
          <input type="text" name="name" class="box" placeholder="nhập tên sản phẩm" required>
          <input type="number" min="0" name="price" class="box" placeholder="nhập giá sản phẩm" required>
          <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box" required>
+          <select name="category_id" class="box" required>
+      <option value="">-- Chọn thể loại --</option>
+      <?php
+      $cats = mysqli_query($conn, "SELECT * FROM categories");
+      while($row = mysqli_fetch_assoc($cats)){
+         echo "<option value='{$row['id']}'>{$row['name']}</option>";
+      }
+      ?>
+   </select>
          <input type="submit" value="thêm sản phẩm" name="add_product" class="btn">
       </form>
 
