@@ -47,11 +47,7 @@ if (isset($_GET['delete'])) {
    $fetch_delete_image = mysqli_fetch_assoc($delete_image_query);
    unlink('uploaded_img/' . $fetch_delete_image['image']);
    mysqli_query($conn, "DELETE FROM `products` WHERE id = '$delete_id'") or die('query failed');
-   
-   // Giữ lại trang khi xóa
-   $page = isset($_GET['page']) ? $_GET['page'] : 1;
-   header('location:admin_products.php?page=' . $page);
-   exit; // Thêm exit để dừng thực thi
+   header('location:admin_products.php');
 }
 
 if (isset($_POST['update_product'])) {
@@ -78,10 +74,7 @@ if (isset($_POST['update_product'])) {
       }
    }
 
-   // Giữ lại trang khi cập nhật
-   $page = isset($_GET['page']) ? $_GET['page'] : 1;
-   header('location:admin_products.php?page=' . $page);
-   exit; // Thêm exit để dừng thực thi
+   header('location:admin_products.php');
 }
 
 ?>
@@ -102,7 +95,29 @@ if (isset($_POST['update_product'])) {
 
    <link rel="stylesheet" href="styles/admin/product.css">
 
-   <link rel="stylesheet" href="styles/pagination.css">
+   <style>
+      .pagination {
+         text-align: center;
+         margin-top: 2rem;
+      }
+      .pagination a {
+         display: inline-block;
+         padding: 1rem 1.5rem;
+         margin: 0 0.5rem;
+         background-color: var(--white);
+         border: var(--border);
+         border-radius: .5rem;
+         color: var(--purple);
+         font-size: 1.8rem;
+      }
+      .pagination a.active {
+         background-color: var(--purple);
+         color: var(--white);
+      }
+      .pagination a:hover {
+         background-color: var(--light-bg);
+      }
+   </style>
 
 </head>
 
@@ -128,21 +143,20 @@ if (isset($_POST['update_product'])) {
       <h1 class="title">sản phẩm mới nhất</h1>
       <div class="box-container">
          <?php
-         // xử lý Phân trang (LOGIC VẪN GIỮ NGUYÊN)
-         $products_per_page = 8; //đặt số sản phẩm hiểm thị trong 1 page là 8
-         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; //lấy số trang hiện tại từ URL, nếu không có thì mặc định là trang 1
-         if ($current_page < 1) { //trang không thể nhỏ hơn 1
+         $products_per_page = 10;
+         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+         if ($current_page < 1) {
             $current_page = 1;
          }
-         $offset = ($current_page - 1) * $products_per_page; //tính toán vị trí bắt đầu lấy sản phẩm từ CSDL
+         $offset = ($current_page - 1) * $products_per_page;
 
          // Đếm tổng số sản phẩm
-         $total_products_query = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `products`") or die('query failed'); //truy vấn đếm tổng số sản phẩm
+         $total_products_query = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `products`") or die('query failed');
          $total_products_row = mysqli_fetch_assoc($total_products_query);
-         $total_products = $total_products_row['total'];//lấy tổng số sản phẩm từ kết quả truy vấn
-         $total_pages = ceil($total_products / $products_per_page);// tính tổng số trang cần thiết
+         $total_products = $total_products_row['total'];
+         $total_pages = ceil($total_products / $products_per_page);
 
-         // Lấy sản phẩm với phân trang
+         // Lấy sản phẩm cho trang hiện tại
          $select_products = mysqli_query($conn, "SELECT * FROM `products` LIMIT $offset, $products_per_page") or die('query failed');
          if (mysqli_num_rows($select_products) > 0) {
             while ($fetch_products = mysqli_fetch_assoc($select_products)) {
@@ -157,17 +171,16 @@ if (isset($_POST['update_product'])) {
                   <div class="details">
                      <div class="name">
                         <img src="./public/card/name.svg" alt="name_icon">
-                        <span title="<?php echo htmlspecialchars($fetch_products['name']); ?>"><?php echo htmlspecialchars($fetch_products['name']); ?></span>
+                        <?php echo $fetch_products['name']; ?>
                      </div>
                      <input type="hidden" name="product_name" value="<?php echo $fetch_products['name']; ?>">
                      <div class="qty-pri">
-                        <input type="number" min="1" name="product_quantity" value="1" class="qty">
                         <div class="price">
                            <span style="font-size:0.7em">$</span><?php echo $fetch_products['price']; ?>
                         </div>
                      </div>
                      <div class="action">
-                        <a href="admin_products.php?update=<?php echo $fetch_products['id']; ?>&page=<?php echo $current_page; ?>" class="option-btn">cập nhật</a>
+                        <a href="admin_products.php?update=<?php echo $fetch_products['id']; ?>" class="option-btn">cập nhật</a>
                         <a href="admin_products.php?delete=<?php echo $fetch_products['id']; ?>&page=<?php echo $current_page; ?>" class="delete-btn" onclick="return confirm('delete this product?');">xóa</a>
                      </div>
                   </div>
@@ -181,12 +194,19 @@ if (isset($_POST['update_product'])) {
          ?>
       </div>
 
-      <?php
-         // Định nghĩa biến $base_url cho component
-         $base_url = 'admin_products.php'; 
-         // Gọi component
-         include 'pagination.php';
-      ?>
+      <div class="pagination">
+         <?php if ($current_page > 1) : ?>
+            <a href="admin_products.php?page=<?php echo $current_page - 1; ?>">Trước</a>
+         <?php endif; ?>
+
+         <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
+            <a href="admin_products.php?page=<?php echo $i; ?>" class="<?php echo ($i == $current_page) ? 'active' : ''; ?>"><?php echo $i; ?></a>
+         <?php endfor; ?>
+
+         <?php if ($current_page < $total_pages) : ?>
+            <a href="admin_products.php?page=<?php echo $current_page + 1; ?>">Sau</a>
+         <?php endif; ?>
+      </div>
 
    </section>
 
@@ -199,7 +219,7 @@ if (isset($_POST['update_product'])) {
          if (mysqli_num_rows($update_query) > 0) {
             while ($fetch_update = mysqli_fetch_assoc($update_query)) {
       ?>
-               <form action="admin_products.php?page=<?php echo $current_page; ?>" method="post" enctype="multipart/form-data">
+               <form action="" method="post" enctype="multipart/form-data">
                   <input type="hidden" name="update_p_id" value="<?php echo $fetch_update['id']; ?>">
                   <input type="hidden" name="update_old_image" value="<?php echo $fetch_update['image']; ?>">
                   <img src="uploaded_img/<?php echo $fetch_update['image']; ?>" alt="">
@@ -221,16 +241,13 @@ if (isset($_POST['update_product'])) {
 
    <script src="js/admin_script.js"></script>
    <script>
-      //nút close-update giữ trang hiện tại khi đóng form chỉnh sửa
-      // Đoạn script này vẫn giữ nguyên như bạn đã cung cấp
-      if(document.querySelector('#close-update')){
-         document.querySelector('#close-update').onclick = () => {
-            document.querySelector('.edit-product-form').style.display = 'none';// Ẩn form chỉnh sửa
-
-            const urlParams = new URLSearchParams(window.location.search);// Lấy tham số URL
-            const page = urlParams.get('page') || 1;// Lấy trang hiện tại hoặc về trang 1 nếu không có
-            window.location.href = 'admin_products.php?page=' + page;// Chuyển hướng về trang hiện tại
-         }
+      // Sửa đổi nút close-update để quay về trang hiện tại
+      document.querySelector('#close-update').onclick = () => {
+         document.querySelector('.edit-product-form').style.display = 'none';
+         // Lấy trang hiện tại từ URL nếu có, nếu không thì về trang 1
+         const urlParams = new URLSearchParams(window.location.search);
+         const page = urlParams.get('page') || 1;
+         window.location.href = 'admin_products.php?page=' + page;
       }
    </script>
 

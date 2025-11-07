@@ -9,6 +9,44 @@
     margin: 0 auto;
 }
 
+section.products {
+    text-align: center;
+}
+
+.pagination {
+    display: inline-flex;
+    margin-top: 2rem;
+    border: 1px solid #ccc;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 1rem 1.5rem;
+    margin: 0; /* Xóa margin */
+    background-color: var(--white);
+    border: none; /* Xóa viền riêng lẻ */
+    border-radius: 0; /* Xóa bo góc riêng lẻ */
+    color: var(--purple); /* Giữ màu của theme */
+    font-size: 1.8rem;
+    text-decoration: none;
+    border-right: 1px solid #ccc; /* Thêm đường kẻ dọc */
+}
+      
+.pagination a:last-child {
+    border-right: none; /* Xóa đường kẻ dọc ở nút cuối cùng */
+}
+      
+.pagination a.active {
+    background-color: var(--purple);
+    color: var(--white);
+}
+      
+.pagination a:hover:not(.active) {
+    background-color: var(--light-bg);
+}
+
 .products form h3 {
     font-size: 2.5rem;
     text-transform: uppercase;

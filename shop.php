@@ -5,22 +5,6 @@ include 'config.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
-<h3>Thể loại</h3>
-<ul>
-<?php
-$cats = mysqli_query($conn, "SELECT * FROM categories");
-while($c = mysqli_fetch_assoc($cats)){
-   echo "<li><a href='shop.php?category={$c['id']}'>{$c['name']}</a></li>";
-}
-?>
-</ul>
-
-if(isset($_GET['category'])){
-   $category_id = $_GET['category'];
-   $select_products = mysqli_query($conn, "SELECT * FROM products WHERE category_id = $category_id");
-} else {
-   $select_products = mysqli_query($conn, "SELECT * FROM products");
-}
 
 if (!isset($user_id)) {
    header('location:login.php');

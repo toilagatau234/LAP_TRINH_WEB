@@ -221,13 +221,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
--- Tạo bảng thể loại (categories)
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
-
--- Thêm cột thể loại vào bảng sản phẩm (products)
-ALTER TABLE products
-ADD COLUMN category_id INT,
-ADD FOREIGN KEY (category_id) REFERENCES categories(id);
