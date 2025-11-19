@@ -185,7 +185,7 @@ if (isset($_POST['update_product'])) {
          // Định nghĩa biến $base_url cho component
          $base_url = 'admin_products.php'; 
          // Gọi component
-         include 'pagination.php';
+         include './components/pagination.php';
       ?>
 
    </section>
