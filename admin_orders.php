@@ -10,12 +10,23 @@ if(!isset($admin_id)){
    header('location:login.php');
 }
 
-if(isset($_POST['update_order'])){
+<form action="" method="post">
+   <input type="hidden" name="order_id" value="<?php echo $fetch_orders['id']; ?>">
 
-   $order_update_id = $_POST['order_id'];
-   $update_payment = $_POST['update_payment'];
-   mysqli_query($conn, "UPDATE `orders` SET payment_status = '$update_payment' WHERE id = '$order_update_id'") or die('query failed');
-   $message[] = 'payment status has been updated!';
+   <select name="update_payment">
+      <option value="" disabled selected><?php echo $fetch_orders['payment_status']; ?></option>
+      <option value="pending">Đang xử lý</option>
+      <option value="completed">Thành công</option>
+   </select>
+
+   <input type="submit" name="update_order" value="Cập nhật trạng thái" class="option-btn" style="margin-top:10px;">
+</form>
+
+<a href="admin_orders.php?delete=<?php echo $fetch_orders['id']; ?>" 
+   class="delete-btn" 
+   onclick="return confirm('Bạn chắc muốn xóa đơn hàng này?');">
+   Xóa đơn hàng
+</a>
 
 }
 
@@ -68,23 +79,27 @@ if(isset($_GET['delete'])){
          <p> Tổng sản phẩm : <span><?php echo $fetch_orders['total_products']; ?></span> </p>
          <p> Tổng giá : <span>$<?php echo $fetch_orders['total_price']; ?>/-</span> </p>
          <p> Phương thức thanh toán : <span><?php echo $fetch_orders['method']; ?></span> </p>
-         <form action="" method="post">
-            <input type="hidden" name="order_id" value="<?php echo $fetch_orders['id']; ?>">
-            <select name="update_payment">
-               <option value="" selected disabled><?php echo $fetch_orders['payment_status']; ?></option>
-               <option value="pending">Đang xử lý</option>
-               <option value="completed">Thành công</option>
-            </select>
-         </br>
-         
-         </form>
-         <div class="action">
-                     <!-- <div class="name"><?php echo $fetch_products['name']; ?></div> -->
-                     <a href="admin_products.php?update=<?php echo $fetch_products['id']; ?>
-                        " class="option-btn">Cập nhật</a>
+        <form action="" method="post">
+   <input type="hidden" name="order_id" value="<?php echo $fetch_orders['id']; ?>">
 
-                     <a href="admin_products.php?delete=<?php echo $fetch_products['id']; ?>
-                        " class="delete-btn" onclick="return confirm('delete this product?');">Xóa</a>
+   <select name="update_payment">
+      <option value="" disabled selected><?php echo $fetch_orders['payment_status']; ?></option>
+      <option value="pending">Đang xử lý</option>
+      <option value="completed">Thành công</option>
+   </select>
+
+   <input type="submit" name="update_order" 
+          value="Cập nhật trạng thái" 
+          class="option-btn" 
+          style="margin-top:10px;">
+</form>
+
+<a href="admin_orders.php?delete=<?php echo $fetch_orders['id']; ?>" 
+   class="delete-btn"
+   onclick="return confirm('Bạn chắc muốn xóa đơn hàng này?');">
+   Xóa đơn hàng
+</a>
+
 
          </div>
       </div>
