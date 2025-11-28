@@ -1,0 +1,130 @@
+
+.quick-view {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* Khung chứa nội dung chính (Card Style) */
+.product-detail-card {
+    background-color: var(--white);
+    border-radius: .5rem;
+    box-shadow: var(--box-shadow);
+    padding: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    align-items: flex-start; /* Căn hàng trên cùng */
+}
+
+/* --- CỘT ẢNH SẢN PHẨM (Trái) --- */
+.product-detail-card .image-col {
+    flex: 1 1 40rem; /* Chiếm khoảng 40% chiều rộng */
+    border: 1px solid #eee;
+    border-radius: .5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.product-detail-card .image-col img {
+    width: 100%;
+    max-height: 50rem;
+    object-fit: contain; /* Đảm bảo ảnh không bị méo */
+    border-radius: .5rem;
+    transition: transform 0.3s;
+}
+
+.product-detail-card .image-col img:hover {
+    transform: scale(1.02); /* Phóng to nhẹ khi di chuột */
+}
+
+/* --- CỘT THÔNG TIN (Phải) --- */
+.product-detail-card .content-col {
+    flex: 1 1 40rem; /* Chiếm phần còn lại */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.content-col .name {
+    font-size: 3rem;
+    color: var(--black);
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.content-col .price {
+    font-size: 2.5rem;
+    color: var(--red); /* Màu đỏ cho giá */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.content-col .price span {
+    font-size: 1.6rem;
+    color: var(--light-color);
+    text-decoration: line-through; /* Giá gốc (giả lập nếu muốn thêm sau này) */
+    font-weight: normal;
+}
+
+.content-col .description {
+    font-size: 1.6rem;
+    color: var(--light-color);
+    line-height: 1.8;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 2rem 0;
+}
+
+.content-col .meta-info {
+    font-size: 1.5rem;
+    color: var(--black);
+}
+
+.content-col .meta-info span {
+    color: var(--purple);
+    font-weight: 600;
+}
+
+/* --- FORM ĐẶT HÀNG --- */
+.cart-form {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.cart-form .qty {
+    border: 1px solid var(--black);
+    padding: 1rem;
+    font-size: 1.8rem;
+    color: var(--black);
+    width: 8rem;
+    border-radius: .5rem;
+}
+
+.cart-form .btn {
+    margin-top: 0; /* Reset margin mặc định của btn */
+    background-color: var(--purple);
+    flex: 1; /* Nút dài ra cho đẹp */
+    text-align: center;
+}
+
+.cart-form .btn:hover {
+    background-color: var(--black);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .product-detail-card {
+        flex-direction: column;
+    }
+    .cart-form {
+        flex-wrap: wrap;
+    }
+    .cart-form .btn {
+        width: 100%;
+    }
+}

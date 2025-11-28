@@ -1,74 +1,88 @@
 <?php
-
-include 'config.php';
-
+include 'includes/db.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
-
 if (!isset($user_id)) {
    header('location:login.php');
 }
 
-if (isset($_POST['add_to_cart'])) {
+$db = new Database();
 
-   $product_name = $_POST['product_name'];
-   $product_price = $_POST['product_price'];
-   $product_image = $_POST['product_image'];
-   $product_quantity = $_POST['product_quantity'];
+// Xử lý thêm vào giỏ hàng
+if (isset($_POST['add_to_cart'])) {// Logic thêm vào giỏ hàng
+   $product_name = $_POST['product_name']; // Lấy tên sản phẩm
+   $product_price = $_POST['product_price'];// Lấy giá sản phẩm
+   $product_image = $_POST['product_image'];// Lấy hình ảnh sản phẩm
+   $product_quantity = $_POST['product_quantity'];// Lấy số lượng sản phẩm
 
-   $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
+   $db->query("SELECT * FROM `cart` WHERE name = :name AND user_id = :user_id");// Chuẩn bị câu truy vấn kiểm tra sản phẩm đã có trong giỏ hàng chưa
+   $db->bind(':name', $product_name);// Bind tên sản phẩm
+   $db->bind(':user_id', $user_id);// Bind id người dùng
+   $db->execute();
 
-   if (mysqli_num_rows($check_cart_numbers) > 0) {
-      $message[] = 'already added to cart!';
+   if ($db->rowCount() > 0) {
+      $message[] = 'Sản phẩm đã có trong giỏ hàng!';
    } else {
-      mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
-      $message[] = 'product added to cart!';
+      $db->query("INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES(:user_id, :name, :price, :quantity, :image)");
+      $db->bind(':user_id', $user_id);// Bind id người dùng
+      $db->bind(':name', $product_name);// Bind tên sản phẩm
+      $db->bind(':price', $product_price);// Bind giá sản phẩm
+      $db->bind(':quantity', $product_quantity);// Bind số lượng sản phẩm
+      $db->bind(':image', $product_image);// Bind hình ảnh sản phẩm
+      $db->execute();
+      $message[] = 'Đã thêm sản phẩm vào giỏ hàng!';
    }
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Bookept | Shop</title>
 
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
    <link rel="icon" href="public/favicon.ico">
-
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="styles/main.css">
-
    <link rel="stylesheet" href="styles/customers/service.css">
-
-
+   <link rel="stylesheet" href="styles/pagination.css"> 
 </head>
-
 <body>
 
    <?php include 'header.php'; ?>
 
    <div class="heading">
-      <h3>cửa hàng của chúng tôi</h3>
-      <p> <a href="home.php">Trang chủ</a> / cửa hàng </p>
+      <h3>Cửa hàng của chúng tôi</h3>
+      <p> <a href="home.php">Trang chủ</a> / Cửa hàng </p>
    </div>
 
    <section class="products">
-      <h1 class="title">sản phẩm mới nhất</h1>
+      <h1 class="title">Sản phẩm mới nhất</h1>
       <div class="box-container">
          <?php
-         $select_products = mysqli_query($conn, "SELECT * FROM `products`") or die('query failed');
-         if (mysqli_num_rows($select_products) > 0) {
-            while ($fetch_products = mysqli_fetch_assoc($select_products)) {
+         // --- LOGIC PHÂN TRANG ---
+         $limit = 8;
+         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+         if ($current_page < 1) $current_page = 1;
+         $offset = ($current_page - 1) * $limit;
+
+         // Đếm tổng số sản phẩm
+         $db->query("SELECT COUNT(*) as total FROM `products`"); // Chuẩn bị câu truy vấn đếm tổng số sản phẩm
+         $row_count = $db->single();// Lấy kết quả đếm
+         $total_pages = ceil($row_count['total'] / $limit);// Tính tổng số trang
+
+         // Lấy danh sách sản phẩm theo trang
+         $db->query("SELECT * FROM `products` LIMIT $offset, $limit");// Chuẩn bị câu truy vấn lấy sản phẩm với phân trang
+         $select_products = $db->resultSet();// Lấy kết quả sản phẩm
+
+         if (count($select_products) > 0) { // Kiểm tra có sản phẩm không
+            foreach ($select_products as $fetch_products) {// Lặp qua từng sản phẩm
          ?>
                <form action="" method="post" class="box">
-                  <input type="hidden" name="product_price" value="<?php echo $fetch_products['price']; ?>" class="price">
+                  <input type="hidden" name="product_price" value="<?php echo $fetch_products['price']; ?>">
                   <input type="hidden" name="product_image" value="<?php echo $fetch_products['image']; ?>">
 
                   <div class="image">
@@ -87,27 +101,29 @@ if (isset($_POST['add_to_cart'])) {
                         </div>
                      </div>
                      <div class="action">
-                        <button type="submit" name="add_to_cart"><img src="./public/card/cart.svg" alt="cart_icon">thêm vào giỏ</button>
-                        <img src="./public/card/heart.svg" alt="favourite_icon">
+                        <button type="submit" name="add_to_cart"><img src="./public/card/cart.svg" alt="cart_icon">Thêm vào giỏ</button>
+                        <a href="detail_product.php?id=<?php echo $fetch_products['id']; ?>" class="option-btn" style="padding: 0.8rem 1.5rem;"><i class="fas fa-eye"></i></a>
                      </div>
                   </div>
                </form>
          <?php
             }
          } else {
-            echo '<p class="empty">chưa có sản phẩm nào được thêm vào!</p>';
+            echo '<p class="empty">Chưa có sản phẩm nào!</p>';
          }
          ?>
       </div>
 
+      <?php 
+         // --- GỌI COMPONENT PHÂN TRANG ---
+         $base_url = 'shop.php';
+         include 'components/pagination.php'; 
+      ?>
+
    </section>
 
    <?php include 'footer.php'; ?>
-
-   <!-- custom js file link  -->
    <script src="js/script.js"></script>
-   </script>
 
 </body>
-
 </html>

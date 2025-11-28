@@ -1,12 +1,9 @@
 <?php
-
-include 'config.php';
-
+include 'includes/db.php';
 session_start();
 
 $admin_id = $_SESSION['admin_id'];
-
-if(!isset($admin_id)){
+if (!isset($admin_id)) {
    header('location:login.php');
 }
 if(isset($_POST['update_user'])){
@@ -30,39 +27,39 @@ if(isset($_POST['update_user'])){
    header('location:admin_users.php');
 }
 
-if(isset($_GET['delete'])){
+$db = new Database();
+
+// Xử lý xóa người dùng
+if (isset($_GET['delete'])) {
    $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `users` WHERE id = '$delete_id'") or die('query failed');
+   $db->query("DELETE FROM `users` WHERE id = :id");
+   $db->bind(':id', $delete_id);
+   $db->execute();
    header('location:admin_users.php');
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Admin | Users</title>
+   <title>Admin | Quản lý người dùng</title>
    <link rel="icon" href="public/favicon.ico">
-
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-   <!-- custom admin css file link  -->
-   <link rel="stylesheet" href="styles/admin.css">
-   <link rel="stylesheet" href="styles/admin/users.css" class="css">
-
+   <link rel="stylesheet" href="./styles/admin.css">
+   <link rel="stylesheet" href="./styles/admin/users-admin.css">
+   <link rel="stylesheet" href="styles/pagination.css">
 </head>
+
 <body>
-   
-<?php include 'admin_header.php'; ?>
 
-<section class="users">
+   <?php include 'admin_header.php'; ?>
 
-   <h1 class="title"> tài khoản người dùng </h1>
+   <section class="users">
+      <h1 class="title"> Danh sách người dùng </h1>
 
+<<<<<<< Updated upstream
    <div class="box-container">
       <?php
          $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
@@ -110,17 +107,77 @@ if(isset($_GET['edit'])){
 </div>
 <?php } ?>
 
+=======
+      <div class="table-responsive">
+         <table class="user-table">
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>Họ tên</th>
+                  <th>Email</th>
+                  <th>Loại tài khoản</th>
+                  <th>Hành động</th>
+               </tr>
+            </thead>
+            <tbody>
+               <?php
+               // --- LOGIC PHÂN TRANG ---
+               $limit = 8;
+               $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+               if ($current_page < 1) $current_page = 1;
+               $offset = ($current_page - 1) * $limit;
+
+               // Đếm tổng
+               $db->query("SELECT COUNT(*) as total FROM `users`");
+               $row_count = $db->single();
+               $total_pages = ceil($row_count['total'] / $limit);
+
+               // Lấy dữ liệu
+               $db->query("SELECT * FROM `users` LIMIT $offset, $limit");
+               $select_users = $db->resultSet();
+
+               if (count($select_users) > 0) {
+                  foreach ($select_users as $fetch_users) {
+               ?>
+                     <tr>
+                        <td><?php echo $fetch_users['id']; ?></td>
+                        <td><?php echo htmlspecialchars($fetch_users['name']); ?></td>
+                        <td><?php echo htmlspecialchars($fetch_users['email']); ?></td>
+                        <td>
+                           <?php if ($fetch_users['user_type'] == 'admin'): ?>
+                              <span class="badge badge-admin">Quản trị viên</span>
+                           <?php else: ?>
+                              <span class="badge badge-user">Khách hàng</span>
+                           <?php endif; ?>
+                        </td>
+                        <td>
+                           <a href="admin_users.php?delete=<?php echo $fetch_users['id']; ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');" class="action-btn">
+                              <i class="fas fa-trash"></i> Xóa
+                           </a>
+                        </td>
+                     </tr>
+               <?php
+                  }
+               } else {
+                  echo '<tr><td colspan="5" style="text-align:center; padding:2rem;">Chưa có người dùng nào!</td></tr>';
+               }
+               ?>
+            </tbody>
+         </table>
+>>>>>>> Stashed changes
       </div>
 
       <?php
-         };
+      $base_url = 'admin_users.php';
+      include 'components/pagination.php';
       ?>
-   </div>
 
-</section>
-
-<!-- custom admin js file link  -->
-<script src="js/admin_script.js"></script>
-
+   </section>
+   <script src="js/admin_script.js"></script>
 </body>
+<<<<<<< Updated upstream
 </html>
+=======
+
+</html>
+>>>>>>> Stashed changes

@@ -1,6 +1,6 @@
 <?php
-if(isset($message)){
-   foreach($message as $message){
+if(isset($message)){// Hiển thị thông báo nếu có
+   foreach($message as $message){// Lặp qua từng thông báo
       echo '
       <div class="message">
          <span>'.$message.'</span>

@@ -1,77 +1,73 @@
 <?php
-
-include 'config.php';
-
+include 'includes/db.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
+if(!isset($user_id)){ header('location:login.php'); };
 
-if(!isset($user_id)){
-   header('location:login.php');
-};
+$db = new Database();
 
 if(isset($_POST['add_to_cart'])){
+   // Logic thêm vào giỏ hàng (giống shop.php)
+   $product_name = $_POST['product_name']; // Lấy tên sản phẩm
+   $product_price = $_POST['product_price']; // Lấy giá sản phẩm
+   $product_image = $_POST['product_image']; // Lấy hình ảnh sản phẩm
+   $product_quantity = $_POST['product_quantity']; // Lấy số lượng sản phẩm
 
-   $product_name = $_POST['product_name'];
-   $product_price = $_POST['product_price'];
-   $product_image = $_POST['product_image'];
-   $product_quantity = $_POST['product_quantity'];
+   // Chuẩn bị câu truy vấn kiểm tra sản phẩm đã có trong giỏ hàng chưa
+   $db->query("SELECT * FROM `cart` WHERE name = :name AND user_id = :user_id");
+   $db->bind(':name', $product_name);// Bind tên sản phẩm
+   $db->bind(':user_id', $user_id);// Bind id người dùng
+   $db->execute();
 
-   $check_cart_numbers = mysqli_query($conn, "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'") or die('query failed');
-
-   if(mysqli_num_rows($check_cart_numbers) > 0){
+   if($db->rowCount() > 0){
       $message[] = 'already added to cart!';
    }else{
-      mysqli_query($conn, "INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image')") or die('query failed');
+      // Thêm sản phẩm vào giỏ hàng
+      $db->query("INSERT INTO `cart`(user_id, name, price, quantity, image) VALUES(:user_id, :name, :price, :quantity, :image)");
+      $db->bind(':user_id', $user_id);// Bind id người dùng
+      $db->bind(':name', $product_name);// Bind tên sản phẩm
+      $db->bind(':price', $product_price);// Bind giá sản phẩm
+      $db->bind(':quantity', $product_quantity);// Bind số lượng sản phẩm
+      $db->bind(':image', $product_image);// Bind hình ảnh sản phẩm
+      $db->execute();
       $message[] = 'product added to cart!';
    }
-
-};
-
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Bookept | Search</title>
-   <meta name="description" content="Knowledge space for nerds. Search online books by subject and add them to your favorite cart">
-   <meta name="keywords" content="php, sql, mysql, html, css, javascript, book">
    <link rel="shortcut icon" href="./public/favicon.ico" type="image/x-icon">
-
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="styles/main.css">
-
 </head>
 <body>
-   
 <?php include 'header.php'; ?>
-
 <div class="heading">
    <h3>Tìm kiếm sách</h3>
    <p> <a href="home.php">Trang chủ</a> / Tìm kiếm </p>
 </div>
-
 <section class="search-form">
    <form action="" method="post">
       <input type="text" name="search" placeholder="tìm kiếm sản phẩm..." class="box">
       <input type="submit" name="submit" value="tìm kiếm" class="btn">
    </form>
 </section>
-
 <section class="products" style="padding-top: 0;">
    <div class="box-container">
    <?php
-      if(isset($_POST['submit'])){
-         $search_item = $_POST['search'];
-         $select_products = mysqli_query($conn, "SELECT * FROM `products` WHERE name LIKE '%{$search_item}%'") or die('query failed');
-         if(mysqli_num_rows($select_products) > 0){
-         while($fetch_product = mysqli_fetch_assoc($select_products)){
+      if(isset($_POST['submit'])){ // Nếu người dùng đã gửi biểu mẫu tìm kiếm
+         $search_item = $_POST['search'];// Lấy từ khóa tìm kiếm
+         // Sử dụng ký tự đại diện % cho LIKE
+         $db->query("SELECT * FROM `products` WHERE name LIKE :search");// Chuẩn bị câu truy vấn tìm kiếm
+         $db->bind(':search', "%{$search_item}%");// Bind từ khóa tìm kiếm với ký tự đại diện
+         $select_products = $db->resultSet();// Lấy kết quả tìm kiếm
+         
+         if(count($select_products) > 0){// Nếu có sản phẩm tìm thấy
+            foreach($select_products as $fetch_product){// Lặp qua từng sản phẩm
    ?>
    <form action="" method="post" class="box">
       <img src="uploaded_img/<?php echo $fetch_product['image']; ?>" alt="" class="image">
@@ -94,11 +90,7 @@ if(isset($_POST['add_to_cart'])){
    ?>
    </div>
 </section>
-
 <?php include 'footer.php'; ?>
-
-<!-- custom js file link  -->
 <script src="js/script.js"></script>
-
 </body>
 </html>

@@ -1,69 +1,63 @@
 <?php
-
-include 'config.php';
-
+include 'includes/db.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
+if(!isset($user_id)){ header('location:login.php'); }
 
-if(!isset($user_id)){
-   header('location:login.php');
-}
+$db = new Database();
 
-if(isset($_POST['update_cart'])){
-   $cart_id = $_POST['cart_id'];
-   $cart_quantity = $_POST['cart_quantity'];
-   mysqli_query($conn, "UPDATE `cart` SET quantity = '$cart_quantity' WHERE id = '$cart_id'") or die('query failed');
+if(isset($_POST['update_cart'])){// Logic cập nhật số lượng giỏ hàng
+   $cart_id = $_POST['cart_id'];// Lấy id giỏ hàng
+   $cart_quantity = $_POST['cart_quantity'];// Lấy số lượng giỏ hàng mới
+   $db->query("UPDATE `cart` SET quantity = :quantity WHERE id = :id");// Chuẩn bị câu truy vấn cập nhật số lượng
+   $db->bind(':quantity', $cart_quantity);
+   $db->bind(':id', $cart_id);
+   $db->execute();
    $message[] = 'cart quantity updated!';
 }
 
-if(isset($_GET['delete'])){
-   $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `cart` WHERE id = '$delete_id'") or die('query failed');
-   header('location:cart.php');
+if(isset($_GET['delete'])){// Logic xóa sản phẩm khỏi giỏ hàng
+   $delete_id = $_GET['delete'];// Lấy id sản phẩm cần xóa
+   $db->query("DELETE FROM `cart` WHERE id = :id");// Chuẩn bị câu truy vấn xóa sản phẩm
+   $db->bind(':id', $delete_id);// Bind id sản phẩm
+   $db->execute();// Thực thi câu truy vấn
+   header('location:cart.php');// Chuyển hướng về trang giỏ hàng
 }
 
-if(isset($_GET['delete_all'])){
-   mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
+if(isset($_GET['delete_all'])){// Logic xóa tất cả sản phẩm trong giỏ hàng
+   $db->query("DELETE FROM `cart` WHERE user_id = :user_id");// Chuẩn bị câu truy vấn xóa tất cả sản phẩm
+   $db->bind(':user_id', $user_id);// Bind id người dùng
+   $db->execute();
    header('location:cart.php');
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Bookept | Cart</title>
-   <meta name="description" content="Knowledge space for nerds. Search online books by subject and add them to your favorite cart">
-   <meta name="keywords" content="php, sql, mysql, html, css, javascript, book">
    <link rel="shortcut icon" href="./public/favicon.ico" type="image/x-icon">
-
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="styles/main.css">
    <link rel="stylesheet" href="styles/customers/cart.css">
-
 </head>
 <body>
-   
 <?php include 'header.php'; ?>
-
 <div class="heading">
    <h3>giỏ hàng</h3>
    <p> <a href="home.php">Trang chủ</a> / Giỏ hàng </p>
 </div>
-
 <section class="cart-container">
    <div class="cart-head">
-      <?php $select_cart = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed'); ?>
+      <?php 
+         $db->query("SELECT * FROM `cart` WHERE user_id = :user_id");
+         $db->bind(':user_id', $user_id);
+         $cart_items = $db->resultSet();
+      ?>
       <div class="head-left">
          <h2>Danh sách của tôi</h2>
-         <h6>&bull; <?php echo mysqli_num_rows($select_cart) ?> mặt hàng</h6>
+         <h6>&bull; <?php echo count($cart_items); ?> mặt hàng</h6>
       </div>
       <div>
          <select name="sort_cart" id="sort_cart">
@@ -73,13 +67,11 @@ if(isset($_GET['delete_all'])){
          </select>
       </div>
    </div>
-
    <ul class="cart-list">
       <?php
          $grand_total = 0;
-         $select_cart = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
-         if(mysqli_num_rows($select_cart) > 0){
-            while($fetch_cart = mysqli_fetch_assoc($select_cart)){   
+         if(count($cart_items) > 0){
+            foreach($cart_items as $fetch_cart){   
       ?>
       <li class="cart-item">
          <div class="cart-item-content">
@@ -111,7 +103,7 @@ if(isset($_GET['delete_all'])){
          </form>
       </li>
       <?php
-      $grand_total += $sub_total;
+      $grand_total += ($fetch_cart['quantity'] * $fetch_cart['price']);
          }
       }else{
          echo '<p class="empty">giỏ hàng của bạn đang trống!</p>';
@@ -129,11 +121,7 @@ if(isset($_GET['delete_all'])){
       </li>
    </ul>
 </section>
-
 <?php include 'footer.php'; ?>
-
-<!-- custom js file link  -->
 <script src="js/script.js"></script>
-
 </body>
 </html>

@@ -1,0 +1,91 @@
+.box {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 2px 2px 4px #888;
+    padding: 2rem;
+    display: grid;
+    justify-content: center;
+    font-size: 1.4em;
+}
+
+.delete-btn {
+    background-color: var(--red);
+    padding: 0.5rem 1rem;
+    text-align: center;
+}
+/* Khung chứa bảng để có thanh cuộn ngang trên mobile */
+.users .table-responsive {
+   overflow-x: auto;
+   background-color: var(--white);
+   border-radius: .5rem;
+   box-shadow: var(--box-shadow);
+   padding: 2rem;
+}
+
+/* Định dạng bảng chung */
+.user-table {
+   width: 100%;
+   border-collapse: collapse;
+   font-size: 1.6rem;
+   color: var(--black);
+}
+
+/* Phần tiêu đề bảng (Header) */
+.user-table thead th {
+   background-color: var(--light-bg);
+   padding: 1.5rem;
+   text-align: left;
+   border-bottom: 2px solid #eee;
+   font-weight: bold;
+   white-space: nowrap; /* Giữ tiêu đề trên 1 dòng */
+}
+
+/* Các ô dữ liệu */
+.user-table tbody td {
+   padding: 1.5rem;
+   border-bottom: 1px solid #eee;
+   vertical-align: middle;
+}
+
+/* Hiệu ứng khi di chuột vào hàng */
+.user-table tbody tr:hover {
+   background-color: #f9f9f9;
+}
+
+/* Nhãn phân loại (Badge) */
+.badge {
+   padding: 0.5rem 1rem;
+   border-radius: 0.5rem;
+   color: #fff;
+   font-size: 1.4rem;
+   display: inline-block;
+}
+
+.badge-admin {
+   background-color: var(--orange);
+}
+
+.badge-user {
+   background-color: #2980b9; /* Màu xanh dương cho user thường */
+}
+
+/* Nút hành động (Xóa) */
+.action-btn {
+   display: inline-block;
+   padding: 0.5rem 1rem;
+   border-radius: 0.5rem;
+   text-decoration: none;
+   color: #fff;
+   background-color: var(--red);
+   font-size: 1.4rem;
+   transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+   background-color: #c0392b;
+}
+
+/* Ẩn box-container cũ để tránh xung đột giao diện */
+.box-container { 
+   display: none; 
+}

@@ -1,15 +1,11 @@
 <?php
-
-include 'config.php';
-
+include 'includes/db.php';
 session_start();
 
 $admin_id = $_SESSION['admin_id'];
+if(!isset($admin_id)){ header('location:login.php'); }
 
-if(!isset($admin_id)){
-   header('location:login.php');
-}
-
+$db = new Database();
 ?>
 
 <!DOCTYPE html>
@@ -20,39 +16,26 @@ if(!isset($admin_id)){
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Admin | Dashboard</title>
    <link rel="icon" href="public/favicon.ico">
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-   <!-- custom admin css file link  -->
    <link rel="stylesheet" href="styles/admin.css">
-
    <link rel="stylesheet" href="styles/admin/home.css">
-
 </head>
 <body>
    
 <?php include 'admin_header.php'; ?>
 
-<!-- admin dashboard section starts  -->
-
 <section class="dashboard">
-
    <h1 class="title">bảng điều khiển</h1>
-
    <div class="box-container">
 
       <div class="box">
          <?php
-            $total_pendings = 0;
-            $select_pending = mysqli_query($conn, "SELECT total_price FROM `orders` 
-               WHERE payment_status = 'pending'") or die('query failed');
-
-            if(mysqli_num_rows($select_pending) > 0){
-               while($fetch_pendings = mysqli_fetch_assoc($select_pending)){
-                  $total_price = $fetch_pendings['total_price'];
-                  $total_pendings += $total_price;
-               };
-            };
+            $total_pendings = 0;// Tổng số tiền đang chờ xử lý
+            $db->query("SELECT total_price FROM `orders` WHERE payment_status = 'pending'");
+            $pendings = $db->resultSet();// Lấy tất cả đơn hàng đang chờ xử lý
+            foreach($pendings as $fetch_pendings){
+               $total_pendings += $fetch_pendings['total_price'];// Cộng dồn tổng tiền
+            }
          ?>
          <h3>$<?php echo $total_pendings; ?>/-</h3>
          <p>tổng số tiền đang chờ xử lý</p>
@@ -60,16 +43,12 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php
-            $total_completed = 0;
-            $select_completed = mysqli_query($conn, "SELECT total_price FROM `orders` 
-               WHERE payment_status = 'completed'") or die('query failed');
-
-            if(mysqli_num_rows($select_completed) > 0){
-               while($fetch_completed = mysqli_fetch_assoc($select_completed)){
-                  $total_price = $fetch_completed['total_price'];
-                  $total_completed += $total_price;
-               };
-            };
+            $total_completed = 0;// Tổng số tiền đã hoàn tất
+            $db->query("SELECT total_price FROM `orders` WHERE payment_status = 'completed'");// Lấy tất cả đơn hàng đã hoàn tất
+            $completed = $db->resultSet();
+            foreach($completed as $fetch_completed){
+               $total_completed += $fetch_completed['total_price'];// Cộng dồn tổng tiền
+            }
          ?>
          <h3>$<?php echo $total_completed; ?>/-</h3>
          <p>thanh toán đã hoàn tất</p>
@@ -77,10 +56,9 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php 
-            $select_orders = mysqli_query($conn, "SELECT * FROM `orders`") 
-               or die('query failed');
-
-            $number_of_orders = mysqli_num_rows($select_orders);
+            $db->query("SELECT * FROM `orders`");// Lấy tất cả đơn hàng
+            $db->execute();// Thực thi câu truy vấn
+            $number_of_orders = $db->rowCount();// Đếm số đơn hàng
          ?>
          <h3><?php echo $number_of_orders; ?></h3>
          <p>đơn hàng đã đặt</p>
@@ -88,10 +66,9 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php 
-            $select_products = mysqli_query($conn, "SELECT * FROM `products`") 
-               or die('query failed');
-
-            $number_of_products = mysqli_num_rows($select_products);
+            $db->query("SELECT * FROM `products`");// Lấy tất cả sản phẩm
+            $db->execute();// Thực thi câu truy vấn
+            $number_of_products = $db->rowCount();// Đếm số sản phẩm
          ?>
          <h3><?php echo $number_of_products; ?></h3>
          <p>sản phẩm đã thêm</p>
@@ -99,10 +76,9 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php 
-            $select_users = mysqli_query($conn, "SELECT * FROM `users` 
-               WHERE user_type = 'user'") or die('query failed');
-
-            $number_of_users = mysqli_num_rows($select_users);
+            $db->query("SELECT * FROM `users` WHERE user_type = 'user'");// Lấy tất cả người dùng bình thường
+            $db->execute();// Thực thi câu truy vấn
+            $number_of_users = $db->rowCount();// Đếm số người dùng bình thường
          ?>
          <h3><?php echo $number_of_users; ?></h3>
          <p>người dùng bình thường</p>
@@ -110,10 +86,9 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php 
-            $select_admins = mysqli_query($conn, "SELECT * FROM `users` 
-               WHERE user_type = 'admin'") or die('query failed');
-
-            $number_of_admins = mysqli_num_rows($select_admins);
+            $db->query("SELECT * FROM `users` WHERE user_type = 'admin'");// Lấy tất cả người dùng quản trị
+            $db->execute();// Thực thi câu truy vấn
+            $number_of_admins = $db->rowCount();// Đếm số người dùng quản trị
          ?>
          <h3><?php echo $number_of_admins; ?></h3>
          <p>người dùng quản trị</p>
@@ -121,10 +96,9 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php 
-            $select_account = mysqli_query($conn, "SELECT * FROM `users`") 
-               or die('query failed');
-
-            $number_of_account = mysqli_num_rows($select_account);
+            $db->query("SELECT * FROM `users`");   // Lấy tất cả tài khoản
+            $db->execute();// Thực thi câu truy vấn
+            $number_of_account = $db->rowCount();// Đếm số tài khoản
          ?>
          <h3><?php echo $number_of_account; ?></h3>
          <p>tổng số tài khoản</p>
@@ -132,22 +106,15 @@ if(!isset($admin_id)){
 
       <div class="box">
          <?php 
-            $select_messages = mysqli_query($conn, "SELECT * FROM `message`") 
-               or die('query failed');
-
-            $number_of_messages = mysqli_num_rows($select_messages);
+            $db->query("SELECT * FROM `message`");// Lấy tất cả tin nhắn
+            $db->execute();// Thực thi câu truy vấn
+            $number_of_messages = $db->rowCount();// Đếm số tin nhắn
          ?>
          <h3><?php echo $number_of_messages; ?></h3>
          <p>tin nhắn mới</p>
       </div>
    </div>
-
 </section>
-
-<!-- admin dashboard section ends -->
-
-<!-- custom admin js file link  -->
 <script src="js/admin_script.js"></script>
-
 </body>
 </html>

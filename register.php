@@ -1,50 +1,66 @@
 <?php
+// 1. Gọi file db.php chứa class Database
+require_once 'includes/db.php';
+
 session_start();
 
-include 'config.php';
+// 2. Khởi tạo đối tượng Database
+$db = new Database();
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {// Kiểm tra nếu form đã được gửi
 
-   // buộc người đăng ký mới phải có vai trò 'người dùng'
+   // Lấy dữ liệu từ form
+   $name = $_POST['name'];// Lấy tên người dùng
+   $email = $_POST['email'];// Lấy email người dùng
+   // Mã hóa mật khẩu
+   $pass = md5($_POST['password']);// Mã hóa mật khẩu
+   $cpass = md5($_POST['cpassword']);// Mã hóa mật khẩu xác nhận
    $user_type = 'user';
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   // băm mật khẩu trước khi thoát
-   $pass = md5($_POST['password']);
-   $cpass = md5($_POST['cpassword']);
-   $pass = mysqli_real_escape_string($conn, $pass);
-   $cpass = mysqli_real_escape_string($conn, $cpass);
 
-   // kiểm tra xem email đã tồn tại chưa (ngăn chặn các tài khoản trùng lặp cho cùng một email)
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email'") or die('query failed');
+   // 3. Kiểm tra email đã tồn tại chưa (Dùng bind param để bảo mật)
+   $db->query("SELECT * FROM `users` WHERE email = :email");// Chuẩn bị câu truy vấn kiểm tra email
+   $db->bind(':email', $email);// Bind email người dùng
+   $db->execute();
 
-   if (mysqli_num_rows($select_users) > 0) {
-      $message[] = 'user already exist!'; // người dùng đã tồn tại!
+   // 4. Kiểm tra số dòng trả về
+   if ($db->rowCount() > 0) {// Nếu có người dùng với email này
+      $message[] = 'Người dùng đã tồn tại!';
    } else {
-      if ($pass != $cpass) { // xác nhận mật khẩu không khớp
-         $message[] = 'xác nhận mật khẩu không khớp!';
+      if ($pass != $cpass) {
+         $message[] = 'Mật khẩu xác nhận không khớp!';
       } else {
-         $expected_id = 1; // tìm id người dùng trống đầu tiên
-         $ids_result = mysqli_query($conn, "SELECT id FROM `users` ORDER BY id ASC") or die('query failed');
-         while ($row = mysqli_fetch_assoc($ids_result)) { // duyệt qua các id hiện có
-            $current_id = (int)$row['id']; // chuyển đổi id hiện tại sang số nguyên
-            if ($current_id == $expected_id) { // id hiện tại khớp với id dự kiến
-               $expected_id++; // tăng id dự kiến lên để kiểm tra tiếp
-            } elseif ($current_id > $expected_id) { // khoảng trống được tìm thấy
+         // Tìm ID trống tiếp theo (Logic giữ nguyên từ code cũ của bạn)
+         $expected_id = 1;// Bắt đầu từ ID 1
+         $db->query("SELECT id FROM `users` ORDER BY id ASC");// Chuẩn bị câu truy vấn lấy danh sách ID người dùng
+         $ids_result = $db->resultSet();// Lấy kết quả danh sách ID
+
+         foreach($ids_result as $row) { // Lặp qua từng ID 
+            $current_id = (int)$row['id'];// Chuyển ID hiện tại sang kiểu số nguyên
+            if ($current_id == $expected_id) {// Nếu ID hiện tại khớp với ID mong đợi
+               $expected_id++;// Tăng ID mong đợi lên 1
+            } elseif ($current_id > $expected_id) {// Nếu ID hiện tại lớn hơn ID mong đợi, nghĩa là có lỗ hổng
                break;
             }
          }
-
          $new_id = (int)$expected_id;
 
-         $query = "INSERT INTO `users`(id, name, email, password, user_type) VALUES($new_id, '$name', '$email', '$pass', '$user_type')";
-         mysqli_query($conn, $query) or die('query failed: ' . mysqli_error($conn));
-         $message[] = 'registered successfully!';
-         header('location:login.php');
+         // 5. Thêm người dùng mới vào CSDL
+         $db->query("INSERT INTO `users`(id, name, email, password, user_type) VALUES(:id, :name, :email, :password, :user_type)");
+         $db->bind(':id', $new_id);// Bind ID người dùng
+         $db->bind(':name', $name);// Bind tên người dùng
+         $db->bind(':email', $email);// Bind email người dùng
+         $db->bind(':password', $pass);// Bind mật khẩu người dùng
+         $db->bind(':user_type', $user_type);// Bind loại người dùng
+         
+         if($db->execute()){
+             $message[] = 'Đăng ký thành công!';// Thông báo đăng ký thành công
+             header('location:login.php');
+         } else {
+             $message[] = 'Đăng ký thất bại!';
+         }
       }
    }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -55,14 +71,10 @@ if (isset($_POST['submit'])) {
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Bookept | Register</title>
-   <meta name="description" content="Knowledge space for nerds. Search online books by subject and add them to your favorite cart">
-   <meta name="keywords" content="php, sql, mysql, html, css, javascript, book">
    <link rel="shortcut icon" href="./public/favicon.ico" type="image/x-icon">
 
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="styles/main.css">
    <link rel="stylesheet" href="styles/customers/register.css">
 
@@ -70,14 +82,12 @@ if (isset($_POST['submit'])) {
 
 <body>
 
-
-
    <?php
    if (isset($message)) {
-      foreach ($message as $message) {
+      foreach ($message as $msg) {
          echo '
       <div class="message">
-         <span>' . $message . '</span>
+         <span>' . $msg . '</span>
          <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
       </div>
       ';

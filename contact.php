@@ -1,66 +1,57 @@
 <?php
-
-include 'config.php';
-
+include 'includes/db.php';
 session_start();
 
 $user_id = $_SESSION['user_id'];
+if (!isset($user_id)) { header('location:login.php'); }
 
-if (!isset($user_id)) {
-   header('location:login.php');
-}
+$db = new Database();
 
-if (isset($_POST['send'])) {
+if (isset($_POST['send'])) { // Xử lý gửi tin nhắn
+   $name = $_POST['name'];// Lấy tên người gửi
+   $email = $_POST['email'];// Lấy email người gửi
+   $number = $_POST['number'];// Lấy số điện thoại người gửi
+   $msg = $_POST['message'];// Lấy nội dung tin nhắn
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $number = $_POST['number'];
-   $msg = mysqli_real_escape_string($conn, $_POST['message']);
+   $db->query("SELECT * FROM `message` WHERE name = :name AND email = :email AND number = :number AND message = :message");// Kiểm tra tin nhắn đã tồn tại chưa
+   $db->bind(':name', $name);// Bind tên người gửi
+   $db->bind(':email', $email);// Bind email người gửi
+   $db->bind(':number', $number);// Bind số điện thoại người gửi
+   $db->bind(':message', $msg);// Bind nội dung tin nhắn
+   $db->execute();
 
-   $select_message = mysqli_query($conn, "SELECT * FROM `message` WHERE name = '$name' AND email = '$email' AND number = '$number' AND message = '$msg'") or die('query failed');
-
-   if (mysqli_num_rows($select_message) > 0) {
+   if ($db->rowCount() > 0) {
       $message[] = 'message sent already!';
    } else {
-      mysqli_query($conn, "INSERT INTO `message`(user_id, name, email, number, message) VALUES('$user_id', '$name', '$email', '$number', '$msg')") or die('query failed');
+      $db->query("INSERT INTO `message`(user_id, name, email, number, message) VALUES(:user_id, :name, :email, :number, :message)");// Thêm tin nhắn mới vào CSDL
+      $db->bind(':user_id', $user_id);// Bind id người dùng
+      $db->bind(':name', $name);// Bind tên người gửi
+      $db->bind(':email', $email);// Bind email người gửi
+      $db->bind(':number', $number);// Bind số điện thoại người gửi
+      $db->bind(':message', $msg);// Bind nội dung tin nhắn
+      $db->execute();
       $message[] = 'message sent successfully!';
    }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
    <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Bookept | Contact</title>
-   <meta name="description" content="Knowledge space for nerds. Search online books by subject and add them to your favorite cart">
-   <meta name="keywords" content="php, sql, mysql, html, css, javascript, book">
    <link rel="shortcut icon" href="./public/favicon.ico" type="image/x-icon">
-
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="styles/main.css">
-
 </head>
-
 <body>
-
    <?php include 'header.php'; ?>
-
    <div class="heading">
       <h3>liên hệ với chúng tôi</h3>
       <p><a href="home.php">Trang chủ</a> / liên hệ</p>
    </div>
-
    <section class="contact">
       <form action="" method="post">
-         <h3>&#9135;&#9135;&#9135;&#9135;&nbsp;&nbsp;nói điều gì đó!</h3>
+         <h3>⎯⎯⎯⎯  nói điều gì đó!</h3>
          <input type="text" name="name" required placeholder="tên đầy đủ" class="box">
          <input type="email" name="email" required placeholder="email" class="box">
          <input type="number" name="number" required placeholder="số điện thoại" class="box">
@@ -80,27 +71,14 @@ if (isset($_POST['send'])) {
             </div>
          </div>
          <div class="contact-social">
-            <a href="https://bookept.herokuapp.com">
-               <img src="./public/contact/website.svg" alt="website">
-            </a>
-            <a href="">
-               <img src="./public/contact/messenger.svg" alt="messenger">
-            </a>
-            <a href="">
-               <img src="./public/contact/github.svg" alt="github">
-            </a>
-            <a href="mailto:ititiu19228@student.hcmiu.edu.vn">
-               <img src="./public/contact/email.svg" alt="email">
-            </a>
+            <a href="https://bookept.herokuapp.com"><img src="./public/contact/website.svg" alt="website"></a>
+            <a href=""><img src="./public/contact/messenger.svg" alt="messenger"></a>
+            <a href=""><img src="./public/contact/github.svg" alt="github"></a>
+            <a href="mailto:ititiu19228@student.hcmiu.edu.vn"><img src="./public/contact/email.svg" alt="email"></a>
          </div>
       </div>
    </section>
-
    <?php include 'footer.php'; ?>
-
-   <!-- custom js file link  -->
    <script src="js/script.js"></script>
-
 </body>
-
 </html>

@@ -10,30 +10,57 @@ if (isset($message)) {
    }
 }
 ?>
-
 <div class="header">
    <div class="flex">
       <a href="home.php" class="logo"><img src="public/icon/logo.png" alt="logo">Bookept</a>
-
       <nav class="navbar">
          <a href="home.php"><img src="public/header/home_icon.svg" alt="home_icon">Trang chủ</a>
          <a href="about.php"><img src="public/header/about_icon.svg" alt="about_icon">Thông tin</a>
          <a href="shop.php"><img src="public/header/shop_icon.svg" alt="shop_icon">Cửa hàng</a>
+      <?php
+      // Đảm bảo session đã được khởi tạo (nếu chưa) để có thể dùng $_SESSION
+      if (session_status() === PHP_SESSION_NONE) {
+         session_start();
+      }
+
+      // Nếu chưa có đối tượng $db, bao gồm file kết nối và khởi tạo Database
+      if (!isset($db)) {
+         if (file_exists(__DIR__ . '/includes/db.php')) {
+            require_once __DIR__ . '/includes/db.php';
+         } else {
+            // thử đường dẫn tương đối nếu file nằm ở thư mục cha
+            require_once 'includes/db.php';
+         }
+         if (class_exists('Database')) {
+            $db = new Database();
+         }
+      }
+
+      // Lấy user_id từ scope hiện tại hoặc từ session nếu có
+      if (!isset($user_id)) {
+         $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+      }
+
+      // Mặc định số lượng giỏ hàng = 0. Chỉ truy vấn khi $db hợp lệ và $user_id tồn tại
+      $cart_rows_number = 0;
+      if (isset($db) && $db && !empty($user_id)) {
+         $db->query("SELECT * FROM `cart` WHERE user_id = :user_id");
+         $db->bind(':user_id', $user_id);
+         $db->execute();
+         $cart_rows_number = $db->rowCount();
+      }
+
+?>
+
          <a href="contact.php"><img src="public/header/contact_icon.svg" alt="contact_icon">Liên hệ</a>
          <a href="orders.php"><img src="public/header/order_icon.svg" alt="order_icon">Đơn hàng</a>
       </nav>
-
       <div class="icons">
          <div id="menu-btn" class="fas fa-bars"></div>
          <a href="search_page.php" class="fas fa-search"></a>
          <div id="user-btn" class="fas fa-user"></div>
-         <?php
-         $select_cart_number = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
-         $cart_rows_number = mysqli_num_rows($select_cart_number);
-         ?>
          <a href="cart.php"> <i class="fas fa-shopping-cart"></i> <span>(<?php echo $cart_rows_number; ?>)</span> </a>
       </div>
-
       <div class="user-box">
          <p><img src="./public/header/account/user.svg" alt="user_icon">user : <span><?php echo $_SESSION['user_name']; ?></span></p>
          <p><img src="./public/header/account/email.svg" alt="email.svg">email : <span><?php echo $_SESSION['user_email']; ?></span></p>
