@@ -1,0 +1,91 @@
+/* Khung Card */
+.admin-card {
+   background: var(--white);
+   border-radius: .5rem;
+   box-shadow: var(--box-shadow);
+   margin: 2rem auto;
+   border-top: 3px solid var(--purple);
+   overflow: hidden;
+   max-width: 1200px;
+}
+
+.card-header {
+   padding: 1.5rem 2rem;
+   border-bottom: 1px solid #eee;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.card-header h3 {
+   font-size: 2rem;
+   color: var(--black);
+}
+
+.card-body {
+   padding: 2rem;
+   overflow-x: auto;
+}
+
+/* Bảng */
+.custom-table {
+   width: 100%;
+   border-collapse: collapse;
+   font-size: 1.5rem;
+   color: var(--black);
+   min-width: 900px;
+}
+
+.custom-table thead th {
+   background-color: #f8f9fa;
+   padding: 1.5rem;
+   text-align: left;
+   border-bottom: 2px solid #dee2e6;
+   font-weight: 600;
+   white-space: nowrap;
+}
+
+.custom-table tbody td {
+   padding: 1.5rem;
+   border-bottom: 1px solid #eee;
+   vertical-align: top;
+}
+
+.custom-table tbody tr:hover {
+   background-color: #f1f1f1;
+}
+
+/* Style nội dung */
+.info-group span {
+   display: block;
+   margin-bottom: 0.5rem;
+}
+
+.message-content {
+   background: #f9f9f9;
+   padding: 1rem;
+   border-radius: .5rem;
+   border: 1px dashed #ccc;
+   font-style: italic;
+   color: #555;
+   max-width: 400px;
+}
+
+/* Nút xóa */
+.btn-delete {
+   padding: 0.6rem 1.2rem;
+   border-radius: 0.3rem;
+   color: #fff;
+   background-color: var(--red);
+   font-size: 1.4rem;
+   text-decoration: none;
+   display: inline-block;
+   transition: 0.2s;
+}
+
+.btn-delete:hover {
+   background-color: #c0392b;
+}
+
+/* Ẩn giao diện cũ */
+.box-container { display: none; }

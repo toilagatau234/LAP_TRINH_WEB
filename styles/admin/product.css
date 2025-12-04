@@ -24,25 +24,31 @@ section.products {
 .pagination a {
     display: inline-block;
     padding: 1rem 1.5rem;
-    margin: 0; /* Xóa margin */
+    margin: 0;
+    /* Xóa margin */
     background-color: var(--white);
-    border: none; /* Xóa viền riêng lẻ */
-    border-radius: 0; /* Xóa bo góc riêng lẻ */
-    color: var(--purple); /* Giữ màu của theme */
+    border: none;
+    /* Xóa viền riêng lẻ */
+    border-radius: 0;
+    /* Xóa bo góc riêng lẻ */
+    color: var(--purple);
+    /* Giữ màu của theme */
     font-size: 1.8rem;
     text-decoration: none;
-    border-right: 1px solid #ccc; /* Thêm đường kẻ dọc */
+    border-right: 1px solid #ccc;
+    /* Thêm đường kẻ dọc */
 }
-      
+
 .pagination a:last-child {
-    border-right: none; /* Xóa đường kẻ dọc ở nút cuối cùng */
+    border-right: none;
+    /* Xóa đường kẻ dọc ở nút cuối cùng */
 }
-      
+
 .pagination a.active {
     background-color: var(--purple);
     color: var(--white);
 }
-      
+
 .pagination a:hover:not(.active) {
     background-color: var(--light-bg);
 }
@@ -284,9 +290,10 @@ section.products {
 
 .products .box-container .box .action {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-evenly;
     gap: 0.25rem;
+    flex-direction: row;
+    align-items: center;
 }
 
 .products .box-container .box .action>button {
@@ -303,4 +310,32 @@ section.products {
 .products .box-container .box .action>img {
     padding: 0.25rem;
     cursor: pointer;
+}
+
+
+/* CSS nhỏ để hiển thị số lượng đẹp hơn */
+.qty-display {
+    font-size: 1.6rem;
+    color: var(--black);
+    padding: 1rem 0;
+    border: 1px solid var(--light-bg);
+    background: var(--light-bg);
+    border-radius: .5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.qty-display span {
+    color: var(--purple);
+    font-weight: bold;
+}
+
+.out-of-stock {
+    color: var(--red) !important;
+}
+
+.edit-product-form textarea {
+    height: 15rem; /* Chiều cao mặc định */
+    resize: vertical; /* Chỉ cho phép kéo giãn chiều dọc */
+    font-family: inherit;
 }

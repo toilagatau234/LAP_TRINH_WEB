@@ -37,7 +37,7 @@ $db = new Database();
                $total_pendings += $fetch_pendings['total_price'];// Cộng dồn tổng tiền
             }
          ?>
-         <h3>$<?php echo $total_pendings; ?>/-</h3>
+         <h3>$<?php echo $total_pendings; ?></h3>
          <p>tổng số tiền đang chờ xử lý</p>
       </div>
 
@@ -50,7 +50,7 @@ $db = new Database();
                $total_completed += $fetch_completed['total_price'];// Cộng dồn tổng tiền
             }
          ?>
-         <h3>$<?php echo $total_completed; ?>/-</h3>
+         <h3>$<?php echo $total_completed; ?></h3>
          <p>thanh toán đã hoàn tất</p>
       </div>
 

@@ -38,20 +38,22 @@ if (isset($_POST['add_to_cart'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Bookept | Chi tiết sản phẩm</title>
-   
+
    <link rel="shortcut icon" href="./public/favicon.ico" type="image/x-icon">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
    <link rel="stylesheet" href="styles/main.css">
    <link rel="stylesheet" href="styles/customers/detail_product.css">
 
 </head>
+
 <body>
-   
+
    <?php include 'header.php'; ?>
 
    <div class="heading">
@@ -61,59 +63,59 @@ if (isset($_POST['add_to_cart'])) {
 
    <section class="quick-view">
       <?php
-         if(isset($_GET['id'])){
-            $pid = $_GET['id'];
-            
-            // Truy vấn lấy thông tin sản phẩm
-            $db->query("SELECT * FROM `products` WHERE id = :id");
-            $db->bind(':id', $pid);
-            $product = $db->single();
+      if (isset($_GET['id'])) {
+         $pid = $_GET['id'];
 
-            if($product){
+         // Truy vấn lấy thông tin sản phẩm
+         $db->query("SELECT * FROM `products` WHERE id = :id");
+         $db->bind(':id', $pid);
+         $product = $db->single();
+
+         if ($product) {
       ?>
-      
-      <div class="product-detail-card">
-         
-         <div class="image-col">
-            <img src="uploaded_img/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
-         </div>
 
-         <div class="content-col">
-            <div class="name"><?php echo $product['name']; ?></div>
-            
-            <div class="price">
-               $<?php echo $product['price']; ?>/-
+            <div class="product-detail-card">
+
+               <div class="image-col">
+                  <img src="uploaded_img/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
                </div>
 
-            <div class="meta-info">
-               Trạng thái: <span>Còn hàng (<?php echo $product['soluong'] ?? 'Sẵn có'; ?>)</span>
-            </div>
-            
-            <div class="description">
-               <b>Mô tả sản phẩm:</b><br>
-               Đây là một cuốn sách tuyệt vời mang lại nhiều kiến thức bổ ích. Chất lượng giấy tốt, in ấn sắc nét. Hãy thêm vào giỏ hàng để trải nghiệm ngay!
-            </div>
+               <div class="content-col">
+                  <div class="name"><?php echo $product['name']; ?></div>
+                  <div class="price">$<?php echo $product['price']; ?></div>
 
-            <form action="" method="post" class="cart-form">
-               <input type="hidden" name="product_name" value="<?php echo $product['name']; ?>">
-               <input type="hidden" name="product_price" value="<?php echo $product['price']; ?>">
-               <input type="hidden" name="product_image" value="<?php echo $product['image']; ?>">
-               
-               <input type="number" min="1" name="product_quantity" value="1" class="qty">
-               <button type="submit" name="add_to_cart" class="btn">
-                  <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
-               </button>
-            </form>
+                  <div class="meta-info">
+                     Tình trạng:
+                     <?php
+                     $kho = $product['quantity'];
+                     echo ($kho > 0) ? "<span style='color:green'>Còn hàng ($kho)</span>" : "<span style='color:red'>Hết hàng</span>";
+                     ?>
+                  </div>
 
-         </div>
-      </div>
+                  <div class="description">
+                     <b>Mô tả sản phẩm:</b><br>
+                     <?php echo nl2br(htmlspecialchars($product['details'])); ?>
+                  </div>
+
+                  <form action="" method="post" class="cart-form">
+                     <?php if ($kho > 0): ?>
+                        <input type="number" min="1" max="<?php echo $kho; ?>" name="product_quantity" value="1" class="qty">
+                        <button type="submit" name="add_to_cart" class="btn">
+                           <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+                        </button>
+                     <?php else: ?>
+                        <button type="button" class="btn" style="background:#ccc;" disabled>Tạm hết hàng</button>
+                     <?php endif; ?>
+                  </form>
+               </div>
+            </div>
       <?php
-            }else{
-               echo '<p class="empty">Không tìm thấy sản phẩm!</p>';
-            }
-         }else{
-            echo '<p class="empty">Chưa chọn sản phẩm nào!</p>';
+         } else {
+            echo '<p class="empty">Không tìm thấy sản phẩm!</p>';
          }
+      } else {
+         echo '<p class="empty">Chưa chọn sản phẩm nào!</p>';
+      }
       ?>
    </section>
 
@@ -122,4 +124,5 @@ if (isset($_POST['add_to_cart'])) {
    <script src="js/script.js"></script>
 
 </body>
+
 </html>

@@ -12,45 +12,42 @@ if (isset($_POST['order_btn'])) {
    $number = $_POST['number'];
    $email = $_POST['email'];
    $method = $_POST['method'];
-   // Tạo địa chỉ đầy đủ
+   // tạo địa chỉ đầy đủ
    $address = 'flat no. ' . $_POST['flat'] . ', ' . $_POST['street'] . ', ' . $_POST['city'] . ', ' . $_POST['country'] . ' - ' . $_POST['pin_code'];
    $placed_on = date('d-M-Y');
 
-   $cart_total = 0;// Tổng giá trị giỏ hàng
-   $cart_products[] = '';// Mảng lưu tên sản phẩm trong giỏ hàng
+   $cart_total = 0;
+   $cart_products = [];
 
-   $db->query("SELECT * FROM `cart` WHERE user_id = :user_id");// Lấy các sản phẩm trong giỏ hàng của người dùng
-   $db->bind(':user_id', $user_id);// Bind id người dùng
-   $cart_items = $db->resultSet();// Lấy kết quả giỏ hàng
+   // lấy sản phẩm trong giỏ
+   $db->query("SELECT * FROM `cart` WHERE user_id = :user_id");
+   $db->bind(':user_id', $user_id);
+   $cart_items = $db->resultSet();
 
-   if (count($cart_items) > 0) {// Kiểm tra giỏ hàng có sản phẩm không
-      foreach ($cart_items as $cart_item) {// Lặp qua từng sản phẩm trong giỏ hàng
-         $cart_products[] = $cart_item['name'] . ' (' . $cart_item['quantity'] . ') ';// Thêm tên sản phẩm và số lượng vào mảng
-         $sub_total = ($cart_item['price'] * $cart_item['quantity']);// Tính tổng tiền tạm thời cho sản phẩm này
-         $cart_total += $sub_total;// Cộng dồn vào tổng giá trị giỏ hàng
+   if (count($cart_items) > 0) {
+      foreach ($cart_items as $cart_item) {
+         $cart_products[] = $cart_item['name'] . ' (' . $cart_item['quantity'] . ') ';
+         $sub_total = ($cart_item['price'] * $cart_item['quantity']);
+         $cart_total += $sub_total;
       }
-   }
+      
+      $total_products = implode(', ', $cart_products);
 
-   $total_products = implode(', ', $cart_products);// Chuyển mảng sản phẩm thành chuỗi
+      // kiểm tra đơn hàng trùng lặp
+      $db->query("SELECT * FROM `orders` WHERE name = :name AND number = :number AND email = :email AND method = :method AND address = :address AND total_products = :total_products AND total_price = :total_price");
+      $db->bind(':name', $name);
+      $db->bind(':number', $number);
+      $db->bind(':email', $email);
+      $db->bind(':method', $method);
+      $db->bind(':address', $address);
+      $db->bind(':total_products', $total_products);
+      $db->bind(':total_price', $cart_total);
+      $db->execute();
 
-   // Kiểm tra đơn hàng đã tồn tại chưa
-   $db->query("SELECT * FROM `orders` WHERE name = :name AND number = :number AND email = :email AND method = :method AND address = :address AND total_products = :total_products AND total_price = :total_price");
-   $db->bind(':name', $name);
-   $db->bind(':number', $number);
-   $db->bind(':email', $email);
-   $db->bind(':method', $method);
-   $db->bind(':address', $address);
-   $db->bind(':total_products', $total_products);
-   $db->bind(':total_price', $cart_total);
-   $db->execute();
-
-   if ($cart_total == 0) {
-      $message[] = 'your cart is empty';
-   } else {
       if ($db->rowCount() > 0) {
-         $message[] = 'order already placed!';
+         $message[] = 'Đơn hàng đã được đặt trước đó!';
       } else {
-         // Thêm đơn hàng mới vào CSDL 
+         // thêm đơn hàng mới
          $db->query("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price, placed_on) VALUES(:user_id, :name, :number, :email, :method, :address, :total_products, :total_price, :placed_on)");
          $db->bind(':user_id', $user_id);
          $db->bind(':name', $name);
@@ -63,12 +60,27 @@ if (isset($_POST['order_btn'])) {
          $db->bind(':placed_on', $placed_on);
          $db->execute();
 
-         $message[] = 'order placed successfully!';
-         // Xóa giỏ hàng sau khi đặt hàng thành công
+         // trừ số lượng trong kho
+         foreach ($cart_items as $item) {
+             $product_name_buy = $item['name'];
+             $buy_qty = $item['quantity'];
+
+             // Trừ số lượng trong bảng products
+             $db->query("UPDATE `products` SET soluong = soluong - :buy_qty WHERE name = :name");
+             $db->bind(':buy_qty', $buy_qty);
+             $db->bind(':name', $product_name_buy);
+             $db->execute();
+         }
+
+         // xoá giỏ hàng sau khi đặt hàng
          $db->query("DELETE FROM `cart` WHERE user_id = :user_id");
          $db->bind(':user_id', $user_id);
          $db->execute();
+         
+         $message[] = 'Đặt hàng thành công!';
       }
+   } else {
+      $message[] = 'Giỏ hàng của bạn đang trống!';
    }
 }
 ?>

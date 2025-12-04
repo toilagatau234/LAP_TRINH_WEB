@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap');
+
 :root {
     --purple: #8e44ad;
     --red: #c0392b;
@@ -274,10 +275,9 @@ section {
     min-height: 100vh;
     background-color: rgba(0, 0, 0, .7);
     display: flex;
-    align-items: center;
     justify-content: center;
     padding: 2rem;
-    overflow-y: scroll;
+    overflow-y: auto;
     position: fixed;
     top: 0;
     left: 0;
@@ -291,6 +291,8 @@ section {
     text-align: center;
     border-radius: .5rem;
     background-color: var(--white);
+    margin: auto;
+    max-width: 100%;
 }
 
 .edit-product-form form img {
@@ -341,6 +343,7 @@ section {
     #menu-btn {
         display: inline-block;
     }
+
     .header .flex .navbar {
         position: absolute;
         top: 99%;
@@ -351,9 +354,11 @@ section {
         border-bottom: var(--border);
         clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     }
+
     .header .flex .navbar.active {
         clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     }
+
     .header .flex .navbar a {
         margin: 2rem;
         display: block;
@@ -364,7 +369,139 @@ section {
     html {
         font-size: 50%;
     }
+
     .title {
         font-size: 3rem;
+    }
+}
+
+/* 1. Container chính của Modal */
+section.edit-product-form {
+    /* Căn giữa màn hình nhưng cho phép cuộn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto !important;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Làm tối nền hơn chút để tập trung */
+}
+
+/* 2. Form bên trong */
+section.edit-product-form form {
+    width: 90rem !important;
+    /* Mở rộng chiều ngang form (trước đây là 50rem) */
+    max-width: 95%;
+    margin: auto;
+    padding: 3rem;
+    background: #fff;
+    border-radius: 1rem;
+    text-align: left;
+    /* Canh trái nội dung thay vì giữa */
+}
+
+/* 3. Grid Layout 2 Cột */
+.row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    /* Cột trái nhỏ hơn (1 phần), cột phải lớn hơn (1.5 phần) */
+    gap: 3rem;
+    /* Khoảng cách giữa 2 cột */
+    align-items: stretch;
+}
+
+/* --- CỘT TRÁI --- */
+.col-left .image-preview {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.col-left .image-preview img {
+    height: 15rem;
+    object-fit: contain;
+    border-radius: .5rem;
+    border: 1px solid #ddd;
+}
+
+.col-left .input-group label {
+    font-size: 1.6rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Hàng chứa Giá & Số lượng nằm ngang */
+.flex-input {
+    display: flex;
+    gap: 1rem;
+}
+
+.flex-input .input-group {
+    flex: 1;
+}
+
+/* --- CỘT PHẢI --- */
+.col-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.col-right label {
+    font-size: 1.6rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* TextArea tự động cao hết cột phải */
+.description-box {
+    flex: 1;
+    /* Chiếm hết chiều cao còn lại */
+    height: 100%;
+    min-height: 35rem;
+    /* Chiều cao tối thiểu để không bị quá ngắn */
+    resize: none;
+    /* Tắt kéo giãn thủ công để giữ layout đẹp */
+    font-size: 1.6rem;
+    line-height: 1.5;
+    padding: 1.5rem;
+}
+
+/* 4. Khu vực nút bấm */
+.btn-container {
+    margin-top: 2rem;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn-container input {
+    margin: 0;
+    /* Reset margin cũ */
+    width: auto;
+    padding: 1rem 3rem;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+/* Khi màn hình nhỏ thì chuyển về 1 cột dọc */
+@media (max-width: 768px) {
+    .row-grid {
+        grid-template-columns: 1fr;
+        /* 1 cột duy nhất */
+        gap: 1rem;
+    }
+
+    section.edit-product-form form {
+        width: 100% !important;
+        margin-top: 5rem;
+        /* Để không bị che mất phần trên */
+    }
+
+    .description-box {
+        min-height: 20rem;
+        /* Giảm chiều cao trên mobile */
     }
 }

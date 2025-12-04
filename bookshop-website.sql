@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 28, 2025 lúc 09:37 AM
+-- Thời gian đã tạo: Th12 04, 2025 lúc 11:02 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -32,7 +32,7 @@ CREATE TABLE `cart` (
   `user_id` int(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `price` int(100) NOT NULL,
-  `quantity` int(100) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `image` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -41,12 +41,8 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id`, `user_id`, `name`, `price`, `quantity`, `image`) VALUES
-(64, 1, 'bash_and_lucy-2', 8, 1, 'bash_and_lucy-2.jpg'),
-(65, 1, 'Greenlights', 8, 1, 'Greenlights.jpg'),
 (76, 4, 'All Your Perfects', 9, 1, 'All Your Perfects.jpg'),
-(83, 3, 'All Your Perfects', 9, 1, 'All Your Perfects.jpg'),
-(84, 1, 'Beyond Order 12 More Rules for Life', 15, 1, 'Beyond Order 12 More Rules for Life.jpg'),
-(85, 1, 'All Your Perfects', 9, 3, 'All Your Perfects.jpg');
+(83, 3, 'All Your Perfects', 9, 1, 'All Your Perfects.jpg');
 
 -- --------------------------------------------------------
 
@@ -71,9 +67,7 @@ INSERT INTO `message` (`id`, `user_id`, `name`, `email`, `number`, `message`) VA
 (12, 3, 'qu anh', 'toilagatau234@gmail.com', '122331414', 'RQRTFJGJG'),
 (13, 3, 'qu anh', 'user@gmail.com', '122331414', 'TDJFKHGJKH'),
 (14, 3, 'qu anh', 'user1@gmail.com', '122331414', '23QW45EU6RI7T86'),
-(15, 3, 'qu anh', 'quanh@gmail.com', '122331414', 'JYKJHGTRHDTJFHKJK'),
-(16, 3, 'qu anh', 'user1@gmail.com', '122331414', 'UETRJF375YERHE'),
-(17, 3, 'qu anh', 'quanh@gmail.com', '122331414', '4256RITUKGHM');
+(18, 1, 'tên gì cũng được', 'toilagatau24@gmail.com', '0123456789', 'agervaergfaerfsgvag');
 
 -- --------------------------------------------------------
 
@@ -101,10 +95,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`id`, `user_id`, `name`, `number`, `email`, `method`, `address`, `total_products`, `total_price`, `placed_on`, `payment_status`) VALUES
 (11, 3, 'qu anh', '122331414', 'user1@gmail.com', 'momo', 'flat no. 13, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', 48 Laws of Power (1) , clever_lands (2) ', 26, '23-Oct-2025', 'completed'),
-(12, 1, 'qu anh', '122331414', 'toilagatau234@gmail.com', 'paypal', 'flat no. 54, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', the_happy_lemon (1) , Apples Never Fall (1) ', 59, '24-Oct-2025', 'completed'),
-(13, 4, 'qu anh', '122331414', 'user2@gmail.com', 'momo', 'flat no. 11, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', All Your Perfects (1) , 48 Laws of Power (1) ', 19, '21-Nov-2025', 'pending'),
-(14, 3, 'qu anh', '122331414', 'admin@gmail.com', 'credit card', 'flat no. 124, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', All Your Perfects (1) , be_well_bee (1) , nightshade (1) ', 29, '21-Nov-2025', 'pending'),
-(15, 3, 'qu anh', '122331414', 'admin@gmail.com', 'paypal', 'flat no. 214, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', Apples Never Fall (1) , All Your Perfects (1) ', 20, '21-Nov-2025', 'pending'),
+(12, 1, 'qu anh', '122331414', 'toilagatau234@gmail.com', 'paypal', 'flat no. 54, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', the_happy_lemon (1) , Apples Never Fall (1) ', 59, '24-Oct-2025', 'pending'),
+(13, 4, 'qu anh', '122331414', 'user2@gmail.com', 'momo', 'flat no. 11, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', All Your Perfects (1) , 48 Laws of Power (1) ', 19, '21-Nov-2025', 'completed'),
 (16, 3, 'qu anh', '122331414', 'toilagatau234@gmail.com', 'visa debit', 'flat no. 3, 3 dường 25a, ho chi minh, Việt Nam - 90000', ', shattered (1) ', 27, '21-Nov-2025', 'pending');
 
 -- --------------------------------------------------------
@@ -118,18 +110,17 @@ CREATE TABLE `products` (
   `name` varchar(100) NOT NULL,
   `price` int(100) NOT NULL,
   `image` varchar(100) NOT NULL,
-  `soluong` int(11) NOT NULL
+  `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `price`, `image`, `soluong`) VALUES
+INSERT INTO `products` (`id`, `name`, `price`, `image`, `quantity`) VALUES
 (1, '48 Laws of Power', 10, '48 Laws of Power.jpg', 0),
-(2, 'All Your Perfects', 9, 'All Your Perfects.jpg', 0),
-(3, 'Apples Never Fall', 11, 'Apples Never Fall.jpg', 0),
-(4, 'bash and lucy 2', 8, 'bash_and_lucy-2.jpg', 0),
+(3, 'Apples Never Fall', 11, 'Apples Never Fall.jpg', 5),
+(4, 'bash and lucy 2', 8, 'bash_and_lucy-2.jpg', 10),
 (5, 'be well bee', 12, 'be_well_bee.jpg', 0),
 (6, 'Beyond Order 12 More Rules for Life', 15, 'Beyond Order 12 More Rules for Life.jpg', 0),
 (7, 'boring girls a novel', 10, 'boring_girls_a_novel.jpg', 0),
@@ -234,7 +225,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT cho bảng `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
