@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 04, 2025 lúc 11:02 PM
+-- Thời gian đã tạo: Th12 05, 2025 lúc 12:10 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -42,7 +42,8 @@ CREATE TABLE `cart` (
 
 INSERT INTO `cart` (`id`, `user_id`, `name`, `price`, `quantity`, `image`) VALUES
 (76, 4, 'All Your Perfects', 9, 1, 'All Your Perfects.jpg'),
-(83, 3, 'All Your Perfects', 9, 1, 'All Your Perfects.jpg');
+(83, 3, 'All Your Perfects', 9, 1, 'All Your Perfects.jpg'),
+(88, 1, 'Apples Never Fall', 11, 4, 'Apples Never Fall.jpg');
 
 -- --------------------------------------------------------
 
@@ -110,49 +111,50 @@ CREATE TABLE `products` (
   `name` varchar(100) NOT NULL,
   `price` int(100) NOT NULL,
   `image` varchar(100) NOT NULL,
-  `quantity` int(11) NOT NULL
+  `quantity` int(11) NOT NULL,
+  `details` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `price`, `image`, `quantity`) VALUES
-(1, '48 Laws of Power', 10, '48 Laws of Power.jpg', 0),
-(3, 'Apples Never Fall', 11, 'Apples Never Fall.jpg', 5),
-(4, 'bash and lucy 2', 8, 'bash_and_lucy-2.jpg', 10),
-(5, 'be well bee', 12, 'be_well_bee.jpg', 0),
-(6, 'Beyond Order 12 More Rules for Life', 15, 'Beyond Order 12 More Rules for Life.jpg', 0),
-(7, 'boring girls a novel', 10, 'boring_girls_a_novel.jpg', 0),
-(8, 'clever lands', 8, 'clever_lands.jpg', 0),
-(9, 'darknet', 5, 'darknet.jpg', 0),
-(10, 'economic', 7, 'economic.jpg', 0),
-(11, 'freefall', 7, 'freefall.jpg', 0),
-(12, 'Greenlights', 8, 'Greenlights.jpg', 0),
-(13, 'history of modern architectur', 12, 'history_of_modern_architecture.jpg', 0),
-(14, 'holy ghosts', 10, 'holy_ghosts.jpg', 0),
-(15, 'lloyd', 13, 'lloyd.jpg', 0),
-(16, 'Maps of Meaning', 14, 'Maps of Meaning.jpg', 0),
-(17, 'Maybe Someday', 12, 'Maybe Someday.jpg', 0),
-(18, 'nightshade', 8, 'nightshade.jpg', 0),
-(19, 'Project Hail Mary', 21, 'Project Hail Mary.jpg', 0),
-(20, 'radical gardening', 24, 'radical_gardening.jpg', 0),
-(21, 'red queen', 81, 'red_queen.jpg', 0),
-(22, 'Reminders of Him', 17, 'Reminders of Him.jpg', 0),
-(23, 'shattered', 27, 'shattered.jpg', 0),
-(24, 'The Four Agreements', 87, 'The Four Agreements.jpg', 0),
-(25, 'The Last Thing He Told Me', 75, 'The Last Thing He Told Me.jpg', 0),
-(26, 'The Laws of Human Nature', 16, 'The Laws of Human Nature.jpg', 0),
-(27, 'The Maid A Novel', 78, 'The Maid_A Novel.jpg', 0),
-(28, 'The Paris Apartment', 57, 'The Paris Apartment.jpg', 0),
-(29, 'the girl of ink and stars', 47, 'the_girl_of_ink_and_stars.jpg', 0),
-(30, 'the happy lemon', 48, 'the_happy_lemon.jpg', 0),
-(31, 'the world', 59, 'the_world.jpg', 0),
-(32, 'Think and Grow Rich', 35, 'Think and Grow Rich.jpg', 0),
-(33, 'Thinking, Fast and Slow', 34, 'Thinking, Fast and Slow.jpg', 0),
-(34, 'Ugly Love', 97, 'Ugly Love .jpg', 0),
-(35, 'Verity', 78, 'Verity.jpg', 0),
-(36, 'Will', 37, 'Will.jpg', 0);
+INSERT INTO `products` (`id`, `name`, `price`, `image`, `quantity`, `details`) VALUES
+(1, '48 Laws of Power', 10, '48 Laws of Power.jpg', 14, 'Chưa có mô tả cho sản phẩm này.'),
+(3, 'Apples Never Fall', 11, 'Apples Never Fall.jpg', 5, 'adsdddawgewyhgerdyhthythy'),
+(4, 'bash and lucy 2', 8, 'bash_and_lucy-2.jpg', 10, 'Chưa có mô tả cho sản phẩm này.'),
+(5, 'be well bee', 12, 'be_well_bee.jpg', 41, 'Chưa có mô tả cho sản phẩm này.'),
+(6, 'Beyond Order 12 More Rules for Life', 15, 'Beyond Order 12 More Rules for Life.jpg', 25, 'Chưa có mô tả cho sản phẩm này.'),
+(7, 'boring girls a novel', 10, 'boring_girls_a_novel.jpg', 26, 'Chưa có mô tả cho sản phẩm này.'),
+(8, 'clever lands', 8, 'clever_lands.jpg', 62, 'Chưa có mô tả cho sản phẩm này.'),
+(9, 'darknet', 5, 'darknet.jpg', 52, 'Chưa có mô tả cho sản phẩm này.'),
+(10, 'economic', 7, 'economic.jpg', 525, 'Chưa có mô tả cho sản phẩm này.'),
+(11, 'freefall', 7, 'freefall.jpg', 13, 'Chưa có mô tả cho sản phẩm này.'),
+(12, 'Greenlights', 8, 'Greenlights.jpg', 15, 'Chưa có mô tả cho sản phẩm này.'),
+(13, 'history of modern architectur', 12, 'history_of_modern_architecture.jpg', 34, 'Chưa có mô tả cho sản phẩm này.'),
+(14, 'holy ghosts', 10, 'holy_ghosts.jpg', 135, 'Chưa có mô tả cho sản phẩm này.'),
+(15, 'lloyd', 13, 'lloyd.jpg', 53, 'Chưa có mô tả cho sản phẩm này.'),
+(16, 'Maps of Meaning', 14, 'Maps of Meaning.jpg', 57, 'Chưa có mô tả cho sản phẩm này.'),
+(17, 'Maybe Someday', 12, 'Maybe Someday.jpg', 36, 'Chưa có mô tả cho sản phẩm này.'),
+(18, 'nightshade', 8, 'nightshade.jpg', 37, 'Chưa có mô tả cho sản phẩm này.'),
+(19, 'Project Hail Mary', 21, 'Project Hail Mary.jpg', 28, 'Chưa có mô tả cho sản phẩm này.'),
+(20, 'radical gardening', 24, 'radical_gardening.jpg', 29, 'Chưa có mô tả cho sản phẩm này.'),
+(21, 'red queen', 81, 'red_queen.jpg', 86, 'Chưa có mô tả cho sản phẩm này.'),
+(22, 'Reminders of Him', 17, 'Reminders of Him.jpg', 277, 'Chưa có mô tả cho sản phẩm này.'),
+(23, 'shattered', 27, 'shattered.jpg', 238, 'Chưa có mô tả cho sản phẩm này.'),
+(24, 'The Four Agreements', 87, 'The Four Agreements.jpg', 75, 'Chưa có mô tả cho sản phẩm này.'),
+(25, 'The Last Thing He Told Me', 75, 'The Last Thing He Told Me.jpg', 75, 'Chưa có mô tả cho sản phẩm này.'),
+(26, 'The Laws of Human Nature', 16, 'The Laws of Human Nature.jpg', 768, 'Chưa có mô tả cho sản phẩm này.'),
+(27, 'The Maid A Novel', 78, 'The Maid_A Novel.jpg', 73, 'Chưa có mô tả cho sản phẩm này.'),
+(28, 'The Paris Apartment', 57, 'The Paris Apartment.jpg', 76, 'Chưa có mô tả cho sản phẩm này.'),
+(29, 'the girl of ink and stars', 47, 'the_girl_of_ink_and_stars.jpg', 7, 'Chưa có mô tả cho sản phẩm này.'),
+(30, 'the happy lemon', 48, 'the_happy_lemon.jpg', 456, 'Chưa có mô tả cho sản phẩm này.'),
+(31, 'the world', 59, 'the_world.jpg', 76, 'Chưa có mô tả cho sản phẩm này.'),
+(32, 'Think and Grow Rich', 35, 'Think and Grow Rich.jpg', 767, 'Chưa có mô tả cho sản phẩm này.'),
+(33, 'Thinking, Fast and Slow', 34, 'Thinking, Fast and Slow.jpg', 0, 'Chưa có mô tả cho sản phẩm này.'),
+(34, 'Ugly Love', 97, 'Ugly Love .jpg', 0, 'Chưa có mô tả cho sản phẩm này.'),
+(35, 'Verity', 78, 'Verity.jpg', 0, 'Chưa có mô tả cho sản phẩm này.'),
+(36, 'Will', 37, 'Will.jpg', 0, 'Chưa có mô tả cho sản phẩm này.');
 
 -- --------------------------------------------------------
 
@@ -219,7 +221,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT cho bảng `message`
